@@ -32,6 +32,7 @@ class Player:
         if key[pygame.K_d] or key[pygame.K_RIGHT]:
             dx += 2
 
+
         # dodanie grawitacji
         self.vel_y += 0.12
         if self.vel_y > 100:
@@ -75,10 +76,12 @@ class Player:
             x_screen = resolution[0] / 2
             self.rect.x = x_screen
             world.x_cord -= dx
+            scroll[0] += 2
+
         else:
             x_screen = self.rect.x
             self.rect.x = x_screen
-            world.x_cord += dx
+
 
         # pygame.draw.rect(screen, (255, 255, 255), self.rect, 2)
 
