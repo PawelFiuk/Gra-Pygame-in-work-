@@ -32,7 +32,6 @@ class Player:
         if key[pygame.K_d] or key[pygame.K_RIGHT]:
             dx += 2
 
-
         # dodanie grawitacji
         self.vel_y += 0.12
         if self.vel_y > 100:
@@ -70,18 +69,18 @@ class Player:
             self.rect.bottom = tile[1].bottom
             self.jumper = "ready"
 
-        # Przewijanie tła
+    # Przewijanie tła
 
         if self.rect.x >= resolution[0] / 2:
             x_screen = resolution[0] / 2
             self.rect.x = x_screen
+            from main import world
             world.x_cord -= dx
-            scroll[0] += 2
-
+            scroll[0] += dx /100
+            self.rect.x -= dx
         else:
             x_screen = self.rect.x
             self.rect.x = x_screen
-
 
         # pygame.draw.rect(screen, (255, 255, 255), self.rect, 2)
 

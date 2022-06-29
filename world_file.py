@@ -1,3 +1,5 @@
+from pygame import key
+
 from settings_file import *
 
 
@@ -35,6 +37,7 @@ class World:
     def draw(self):
         screen.blit(self.bg_background, (self.x_cord, self.y_cord))
         for tile in self.tile_list:
+            tile[1][0] -= scroll[0]
             screen.blit(tile[0], tile[1])
             #pygame.draw.rect(screen, (255, 255, 255), tile[1], 2)
             #from main import player

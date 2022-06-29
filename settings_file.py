@@ -1,5 +1,6 @@
 import pygame
 
+# Potrzebny do kamery, poruszania sie
 scroll = [0, 0]
 
 # Ustawienie odświeżania się obrazu
@@ -21,7 +22,8 @@ pygame.display.set_caption("Demo")
 # Ilość kafelek dzielących mape
 TILE_SIZE = 100
 
-# Mapa z kafelek
+
+# Mapa z kafelek level 1
 
 world_data = (
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
