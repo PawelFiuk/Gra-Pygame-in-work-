@@ -8,8 +8,8 @@ class World:
         self.x_cord = 0
         self.y_cord = 0
         self.tile_list = []
-        dirt_img = pygame.image.load('krajobraz/dirt_1.png').convert()
-        stone_img = pygame.image.load('krajobraz/dirt_1.png').convert()
+        dirt_img = pygame.image.load('krajobraz/dirt_1.png').convert_alpha()
+        stone_img = pygame.image.load('krajobraz/dirt_1.png').convert_alpha()
         self.bg_background = pygame.image.load("miasto tlo.png").convert_alpha()
 
         row_count = 0
@@ -37,6 +37,7 @@ class World:
     def draw(self):
         screen.blit(self.bg_background, (self.x_cord, self.y_cord))
         for tile in self.tile_list:
+
             tile[1][0] -= scroll[0]
             screen.blit(tile[0], tile[1])
             #pygame.draw.rect(screen, (255, 255, 255), tile[1], 2)

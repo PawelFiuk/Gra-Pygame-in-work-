@@ -22,6 +22,10 @@ pygame.display.set_caption("Demo")
 # Ilość kafelek dzielących mape
 TILE_SIZE = 100
 
+# Assety
+
+start_button_img = pygame.image.load("assets/start_button_menu.png")
+exit_button_img = pygame.image.load("assets/quit_button_menu.png")
 
 # Mapa z kafelek level 1
 
