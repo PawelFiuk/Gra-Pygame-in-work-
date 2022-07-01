@@ -1,5 +1,6 @@
 from settings_file import *
 import button
+from pygame import mixer
 
 
 class Menu:
@@ -9,6 +10,8 @@ class Menu:
         self.bg_menu = pygame.image.load("assets/menu_bg.png").convert_alpha()
         self.bg_menu = pygame.transform.scale(self.bg_menu, (1900, 900)).convert_alpha()
         pygame.display.set_caption("Menu")
+        mixer.music.load("assets/Phonothek_Red_Moon.mp3")
+        mixer.music.play()
 
     def draw(self):
         #screen_menu.blit(self.bg_menu, (0, 0))
