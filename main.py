@@ -1,9 +1,15 @@
 import player_file
 import world_file
 from settings_file import *
+import menu_file
 
-# Inicjalizacja okna, określenie jego parametrów
+# Inicjalizacja gry
 pygame.init()
+
+menu_init = menu_file.Menu()
+menu_init.draw()
+
+'''
 # def draw_grid():
 #    for line in range(0, 16):
 #        pygame.draw.line(screen, (255, 255, 255), (0, line * tile_size), (screen_width, line * tile_size))
@@ -14,8 +20,8 @@ world = world_file.World(world_data)
 
 player = player_file.Player(100, SCREEN_HEIGHT-600)
 
-running = True
-while running:
+running_game = True
+while running_game:
     CLOCK.tick(200)
     world.draw()
     player.update()
@@ -23,10 +29,11 @@ while running:
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            running = False
+            running_game = False
         elif pygame.key.get_pressed()[pygame.K_ESCAPE]:
-            running = False
+            running_game = False
 
     pygame.display.flip()
 
 pygame.quit()
+ '''

@@ -15,6 +15,7 @@ resolution = (SCREEN_WIDTH, SCREEN_HEIGHT)
 
 # Stworzenie okna
 screen = pygame.display.set_mode(resolution)
+screen_menu = pygame.display.set_mode(resolution)
 
 # Tytuł
 pygame.display.set_caption("Demo")
