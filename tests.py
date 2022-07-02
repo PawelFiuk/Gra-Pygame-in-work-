@@ -2,7 +2,10 @@ import settings_file
 import pygame
 
 
+# narysowanie staki na kafelkach
 def draw_grid():
-   for line in range(0, 16):
-       pygame.draw.line(settings_file.screen, (255, 255, 255), (0, line * tile_size), (screen_width, line * tile_size))
-       pygame.draw.line(screen, (255, 255, 255), (line * tile_size, 0), (line * tile_size, screen_height))
+    for line in range(0, 16):
+        pygame.draw.line(settings_file.screen, (255, 255, 255), (0, line * settings_file.TILE_SIZE),
+                         (settings_file.SCREEN_WIDTH, line * settings_file.TILE_SIZE))
+        pygame.draw.line(settings_file.screen, (255, 255, 255), (line * settings_file.TILE_SIZE, 0),
+                         (line * settings_file.TILE_SIZE, settings_file.SCREEN_HEIGHT))

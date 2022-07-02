@@ -2,18 +2,17 @@ import player_file
 import world_file
 from settings_file import *
 import menu_file
+import button
 
 # Inicjalizacja gry
 pygame.init()
 
 menu_init = menu_file.Menu()
+button_start = button.Button(100, 500, start_button_img, 1)
 menu_init.draw()
+button_start.draw()
 
 '''
-# def draw_grid():
-#    for line in range(0, 16):
-#        pygame.draw.line(screen, (255, 255, 255), (0, line * tile_size), (screen_width, line * tile_size))
-#        pygame.draw.line(screen, (255, 255, 255), (line * tile_size, 0), (line * tile_size, screen_height))
 # Główna linia gry
 
 world = world_file.World(world_data)
