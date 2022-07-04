@@ -18,7 +18,7 @@ screen = pygame.display.set_mode(resolution)
 screen_menu = pygame.display.set_mode(resolution)
 
 # Tytuł
-pygame.display.set_caption("Demo")
+pygame.display.set_caption("Obsesion")
 
 # Ilość kafelek dzielących mape
 TILE_SIZE = 100

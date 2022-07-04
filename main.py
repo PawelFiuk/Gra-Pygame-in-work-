@@ -21,7 +21,7 @@ player = player_file.Player(100, SCREEN_HEIGHT-600)
 
 running_game = True
 while running_game:
-    CLOCK.tick(200)
+    CLOCK.tick(120)
     world.draw()
     player.update()
     player.draw()
@@ -35,4 +35,4 @@ while running_game:
     pygame.display.flip()
 
 pygame.quit()
- '''
+'''

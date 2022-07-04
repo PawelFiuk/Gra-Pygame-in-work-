@@ -77,12 +77,20 @@ class Player:
             x_screen = resolution[0] / 2
             self.rect.x = x_screen
             from main import world
-            world.x_cord -= dx
-            scroll[0] += dx / 100
-            self.rect.x -= dx
-        else:
-            x_screen = self.rect.x
-            self.rect.x = x_screen
+           # world.x_cord -= dx
+            scroll[0] = dx
+
+            #self.rect.x -= dx
+        elif self.rect.x <= resolution[0] - 1800:
+            x_screen_left = resolution[0] - 1800
+            self.rect.x = x_screen_left
+            scroll[0] = 0
+            scroll[0] -= dx
+
+        #else:
+            #x_screen = self.rect.x
+            #self.rect.x = x_screen
+
 
         # pygame.draw.rect(screen, (255, 255, 255), self.rect, 2)
 

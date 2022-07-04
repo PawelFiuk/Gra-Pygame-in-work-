@@ -10,7 +10,9 @@ class World:
         self.tile_list = []
         dirt_img = pygame.image.load('krajobraz/dirt_1.png').convert_alpha()
         stone_img = pygame.image.load('krajobraz/dirt_1.png').convert_alpha()
-        self.bg_background = pygame.image.load("miasto tlo.png").convert_alpha()
+        #self.image = pygame.transform.scale(img_Augustus, (400, 400)).convert_alpha()
+        background = pygame.image.load("miasto tlo.png").convert_alpha()
+        self.bg_background = pygame.transform.scale(background, (1900, 900)).convert_alpha()
 
         row_count = 0
         for row in data:
