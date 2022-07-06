@@ -8,6 +8,8 @@ class Button:
         self.image = pygame.transform.scale(image, (int(width*scale), int(height*scale)))
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
+        self.rect.x = x
+        self.rect.y = y
         self.clicked = False
 
     def draw(self):
@@ -15,11 +17,11 @@ class Button:
         mouse_pos = pygame.mouse.get_pos()
         screen.blit(self.image, (self.rect.x, self.rect.y))
 
-        if self.rect.colliderect(mouse_pos):
-            if pygame.mouse.get_pressed()[0] == 1 and not self.clicked:
+        if self.rect.collidepoint(mouse_pos):
+            if pygame.mouse.get_pressed()[0] == 1 :
                 self.clicked = True
                 action = True
         if pygame.mouse.get_pressed()[0] == 0:
             self.clicked = False
-
         return action
+
