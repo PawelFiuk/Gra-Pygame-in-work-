@@ -14,6 +14,7 @@ class Player:
         self.height = self.image.get_height()
         self.vel_y = 0
         self.jumper = "ready"  # zmienna pozwalająca na zablokowanie nieskończonego skakania
+        self.flip = False  # obracanie sie postaci, uzywane przy sterowaniu
 
     def update(self):
         global tile
@@ -29,10 +30,12 @@ class Player:
             self.jumper = "jumping"
 
         if key[pygame.K_a] or key[pygame.K_LEFT]:
-            dx -= 2
+            dx -= 4
+            self.flip = True
 
         if key[pygame.K_d] or key[pygame.K_RIGHT]:
-            dx += 2
+            dx += 4
+            self.flip = False
 
         # dodanie grawitacji
         self.vel_y += 0.2
@@ -77,22 +80,21 @@ class Player:
             x_screen = resolution[0] / 2
             self.rect.x = x_screen
             from main import world
-            #world.x_cord -= dx
+            # world.x_cord -= dx
             scroll[0] = dx
 
-            #self.rect.x -= dx
+            # self.rect.x -= dx
         elif self.rect.x <= resolution[0] - 1800:
             x_screen_left = resolution[0] - 1800
             self.rect.x = x_screen_left
             scroll[0] = 0
-            scroll[0] -= dx
+            scroll[0] -= -dx
 
-        #else:
+        # else:
         #    x_screen = self.rect.x
         #    self.rect.x = x_screen
 
-
         # pygame.draw.rect(screen, (255, 255, 255), self.rect, 2)
-
     def draw(self):
-        screen.blit(self.image, self.rect)
+        screen.blit(pygame.transform.flip(self.image, self.flip, False), self.rect)
+

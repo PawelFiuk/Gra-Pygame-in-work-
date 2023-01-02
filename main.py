@@ -14,12 +14,11 @@ running_menu = True
 
 # Główna linia gry
 
-while running_menu:
-    menu_init = new_menu_file.Menu()
-    menu_init.draw()
-    if running_menu == False :
-        running_game = True
+# while running_menu:
+#    menu_init = new_menu_file.Menu()
+#    menu_init.draw()
 
+pygame.init()
 running_game = True
 world = world_file.World(world_data)
 
