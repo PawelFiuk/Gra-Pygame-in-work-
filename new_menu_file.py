@@ -5,8 +5,9 @@ from pygame import mixer
 
 class Menu:
     def __init__(self):
-        #main.running_game = False
+
         self.bg_menu = pygame.image.load("assets/menu_bg.png").convert_alpha()
+        self.main_text = pygame.image.load("assets/main_text.png").convert_alpha()
         self.bg_menu = pygame.transform.scale(self.bg_menu, (1900, 900)).convert_alpha()
         pygame.display.set_caption("Obsesion")
         mixer.music.load("assets/Phonothek_Red_Moon.mp3")
@@ -15,9 +16,13 @@ class Menu:
     def draw(self):
         #screen_menu.blit(self.bg_menu, (0, 0))
         self.running_menu = True
-        from main import button_start, button_quit
+        button_start = button.Button(0, 500, start_button_img, 0.8)
+
+        button_quit = button.Button(60, 700, exit_button_img, 0.025)
+
         while self.running_menu:
             screen_menu.blit(self.bg_menu, (0, 0))
+            screen_menu.blit(self.main_text, (600, 100))
             button_start.draw()
             button_quit.draw()
             for event in pygame.event.get():
@@ -33,11 +38,10 @@ class Menu:
 
             if button_start.draw():
                 self.running_menu = False
-                import main
-                main.running_menu = True
-                pygame.quit()
+                running_game = True
                 break
 
+
             pygame.display.flip()
-        pygame.quit()
+
 

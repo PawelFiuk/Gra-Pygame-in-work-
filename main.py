@@ -1,30 +1,32 @@
 import player_file
 import world_file
 from settings_file import *
-import menu_file
+import new_menu_file
 import button
 import enemy
 
 # Inicjalizacja gry
 pygame.init()
 
-'''
+
 running_game = False
-menu_init = menu_file.Menu()
-button_start = button.Button(0, 500, start_button_img, 0.8)
-button_quit = button.Button(60, 700, exit_button_img, 0.025)
-menu_init.draw()
-'''
+running_menu = True
 
 # Główna linia gry
 
+while running_menu:
+    menu_init = new_menu_file.Menu()
+    menu_init.draw()
+    if running_menu == False :
+        running_game = True
+
+running_game = True
 world = world_file.World(world_data)
 
 player = player_file.Player(100, SCREEN_HEIGHT-600)
 
 enemy_1 = enemy.EnemyBlueGhost(700, SCREEN_HEIGHT-600)
 
-running_game = True
 while running_game:
     CLOCK.tick(200)
     world.draw()
@@ -39,6 +41,4 @@ while running_game:
             running_game = False
 
     pygame.display.flip()
-
-pygame.quit()
 
