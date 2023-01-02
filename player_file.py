@@ -1,7 +1,8 @@
+import pygame.sprite
 from settings_file import *
 
 
-class Player:
+class Player(pygame.sprite.Sprite):
     def __init__(self, x, y):
         # Pobieramy zdjęcie Augustusa, dalej skalujemy (powiększamy) odpowiednio do mapy
         # pygame.sprite.Sprite.__init__(self)
@@ -15,6 +16,11 @@ class Player:
         self.vel_y = 0
         self.jumper = "ready"  # zmienna pozwalająca na zablokowanie nieskończonego skakania
         self.flip = False  # obracanie sie postaci, uzywane przy sterowaniu
+        self.current_health = 10
+        self.max_health = 100
+        self.health_bar_length = 300
+        self.health_ratio = self.max_health / self.health_bar_length
+
 
     def update(self):
         global tile
@@ -36,6 +42,16 @@ class Player:
         if key[pygame.K_d] or key[pygame.K_RIGHT]:
             dx += 4
             self.flip = False
+
+        if key[pygame.K_j]:
+            self.current_health -= 20
+            if self.current_health <= 0:
+                self.current_health = 0
+
+        if key[pygame.K_k]:
+            self.current_health += 20
+            if self.current_health >= self.max_health:
+                self.current_health = self.max_health
 
         # dodanie grawitacji
         self.vel_y += 0.2
@@ -97,4 +113,7 @@ class Player:
         # pygame.draw.rect(screen, (255, 255, 255), self.rect, 2)
     def draw(self):
         screen.blit(pygame.transform.flip(self.image, self.flip, False), self.rect)
+
+    def health_bar(self):
+        pygame.draw.rect(screen, (255, 0, 0), (10, 10, self.current_health / self.health_ratio, 30))
 

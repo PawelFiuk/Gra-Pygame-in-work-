@@ -1,5 +1,4 @@
-import settings_file
-import pygame
+import settings_file, pygame
 
 
 # narysowanie siatki na kafelkach
@@ -12,23 +11,30 @@ def test_draw_grid_tile():
 
 # narysowanie kwadratu na postaci
 
+
 def test_draw_rect_player():
     pass
+
 
 def test_draw_rect_bullet():
     pass
 
+
 def test_draw_rect_enemy():
     pass
+
 
 def test_bars_ui():
     pass
 
+
 def test_draw_rect_npc():
     pass
 
+
 def test_draw_chatting():
     pass
+
 
 def test_draw_ui_eq():
     pass
