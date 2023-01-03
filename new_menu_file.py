@@ -2,7 +2,6 @@ from settings_file import *
 import button
 from pygame import mixer
 
-
 class Menu:
     def __init__(self):
 

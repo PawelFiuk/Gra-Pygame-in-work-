@@ -21,7 +21,6 @@ class Player(pygame.sprite.Sprite):
         self.health_bar_length = 300
         self.health_ratio = self.max_health / self.health_bar_length
 
-
     def update(self):
         global tile
         dx = 0
