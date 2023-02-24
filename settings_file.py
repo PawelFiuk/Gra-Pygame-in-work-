@@ -5,7 +5,7 @@ scroll = [0, 0]
 
 # Ustawienie odświeżania się obrazu
 CLOCK = pygame.time.Clock()
-FPS = 60
+FPS = 200
 
 # Wymiary okna
 SCREEN_WIDTH = 1900
@@ -27,6 +27,17 @@ TILE_SIZE = 100
 
 start_button_img = pygame.image.load("assets/start_button_menu.png")
 exit_button_img = pygame.image.load("assets/quit_button_menu.png")
+
+# strzelanie
+
+SHOOTING = False
+IS_READY_SHOOTING = True
+
+# zmienne globalne do wszystkiego
+
+play_menu_theme_music = True
+
+
 
 # Mapa z kafelek level 1
 

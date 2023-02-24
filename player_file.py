@@ -4,6 +4,7 @@ from settings_file import *
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, x, y):
+        super().__init__()
         # Pobieramy zdjęcie Augustusa, dalej skalujemy (powiększamy) odpowiednio do mapy
         # pygame.sprite.Sprite.__init__(self)
         img_Augustus = pygame.image.load('Augustus IV wersja 4.png').convert_alpha()
@@ -116,3 +117,5 @@ class Player(pygame.sprite.Sprite):
     def health_bar(self):
         pygame.draw.rect(screen, (255, 0, 0), (10, 10, self.current_health / self.health_ratio, 30))
 
+    def position(self):
+        return [self.rect.x / 2], [self.rect.y ]

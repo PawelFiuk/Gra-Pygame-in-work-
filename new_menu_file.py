@@ -2,6 +2,7 @@ from settings_file import *
 import button
 from pygame import mixer
 
+
 class Menu:
     def __init__(self):
 
@@ -9,7 +10,7 @@ class Menu:
         self.bg_menu = pygame.image.load("assets/menu_bg.png").convert_alpha()
         self.main_text = pygame.image.load("assets/main_text.png").convert_alpha()
         self.bg_menu = pygame.transform.scale(self.bg_menu, (1900, 900)).convert_alpha()
-        pygame.display.set_caption("Obsesion")
+        pygame.display.set_caption("Obsesion");
         mixer.music.load("assets/Phonothek_Red_Moon.mp3")
         mixer.music.play(-1)
 
