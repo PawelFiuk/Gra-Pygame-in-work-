@@ -3,7 +3,7 @@ import pygame
 import settings_file
 
 
-class EnemyBlueGhost:
+class EnemyBlueGhost():
     def __init__(self, x, y):
         self.x = x
         self.y = y

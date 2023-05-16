@@ -1,13 +1,13 @@
 import pygame.sprite
 from settings_file import *
-#from bullets import Bullets
+from bullets import Bullets
 
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, x, y):
-        super().__init__()
+
         # Pobieramy zdjęcie Augustusa, dalej skalujemy (powiększamy) odpowiednio do mapy
-        # pygame.sprite.Sprite.__init__(self)
+        pygame.sprite.Sprite.__init__(self)
         img_Augustus = pygame.image.load('Augustus IV wersja 4.png').convert_alpha()
         self.image = pygame.transform.scale(img_Augustus, (400, 400)).convert_alpha()
         self.rect = self.image.get_rect()  # dzielimy postać na kwadrat
@@ -119,8 +119,9 @@ class Player(pygame.sprite.Sprite):
         pygame.draw.rect(screen, (255, 0, 0), (10, 10, self.current_health / self.health_ratio, 30))
 
     def position(self):
-        return [self.rect.x / 2], [self.rect.y ]
+        return [self.rect.x / 2], [self.rect.y]
 
-"""    def shot_bullet(self):
-        return Bullets(self.rect.x, self.rect.y)
-"""
+    def shot_bullet(self):
+        pos_x = self.rect.x
+        pos_y = self.rect.y
+        return Bullets(pos_x, pos_y)
