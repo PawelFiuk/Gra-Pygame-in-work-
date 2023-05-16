@@ -1,6 +1,8 @@
+import pygame
+
 import player_file, world_file, enemy, button, new_menu_file
 from settings_file import *
-import bullets
+#import bullets
 
 # Inicjalizacja gry
 pygame.init()
@@ -31,10 +33,12 @@ while running_menu:
             player.draw()
             player.health_bar()
             enemy_1.draw(screen)
-            essa = bullets.Bullets()
-            essa.shooting()
+            #essa = bullets.Bullets()
+            #essa.shooting()
             play_menu_theme_music = False
-
+            #for event in pygame.event.get():
+            #    if event.type == pygame.MOUSEBUTTONUP:
+             #       bullet_groups.add(player.shot_bullet())
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running_game = False
@@ -42,6 +46,9 @@ while running_menu:
                 elif pygame.key.get_pressed()[pygame.K_ESCAPE]:
                     running_game = False
                     running_menu = False
+
+            #bullet_groups.draw(screen)
+            #bullet_groups.update()
 
             pygame.display.flip()
 

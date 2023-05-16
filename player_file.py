@@ -1,5 +1,6 @@
 import pygame.sprite
 from settings_file import *
+#from bullets import Bullets
 
 
 class Player(pygame.sprite.Sprite):
@@ -119,3 +120,7 @@ class Player(pygame.sprite.Sprite):
 
     def position(self):
         return [self.rect.x / 2], [self.rect.y ]
+
+"""    def shot_bullet(self):
+        return Bullets(self.rect.x, self.rect.y)
+"""
