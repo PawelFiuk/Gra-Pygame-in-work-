@@ -30,8 +30,6 @@ exit_button_img = pygame.image.load("assets/quit_button_menu.png")
 
 # strzelanie
 
-SHOOTING = False
-IS_READY_SHOOTING = True
 
 # zmienne globalne do wszystkiego
 

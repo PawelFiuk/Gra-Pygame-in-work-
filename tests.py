@@ -1,5 +1,5 @@
-import settings_file, pygame
-
+import settings_file
+import pygame
 
 # narysowanie siatki na kafelkach
 def test_draw_grid_tile():

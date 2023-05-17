@@ -1,6 +1,7 @@
 import pygame.sprite
 from settings_file import *
 from bullets import Bullets
+import time
 
 
 class Player(pygame.sprite.Sprite):
@@ -18,7 +19,7 @@ class Player(pygame.sprite.Sprite):
         self.vel_y = 0
         self.jumper = "ready"  # zmienna pozwalająca na zablokowanie nieskończonego skakania
         self.flip = False  # obracanie sie postaci, uzywane przy sterowaniu
-        self.current_health = 10
+        self.current_health = 100
         self.max_health = 100
         self.health_bar_length = 300
         self.health_ratio = self.max_health / self.health_bar_length
@@ -124,4 +125,4 @@ class Player(pygame.sprite.Sprite):
     def shot_bullet(self):
         pos_x = self.rect.x
         pos_y = self.rect.y
-        return Bullets(pos_x, pos_y)
+        return Bullets([pos_x + 500, pos_y + 220])
