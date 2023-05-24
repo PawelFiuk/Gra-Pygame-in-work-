@@ -1,41 +1,41 @@
 import pygame
 
-# Potrzebny do kamery, poruszania sie
-scroll = [0, 0]
+# Scrolling
+scroll_position_of_player = [0, 0]
 
-# Ustawienie odświeżania się obrazu
+# Refreshing of game
+
 CLOCK = pygame.time.Clock()
 FPS = 200
 
-# Wymiary okna
+# Window resolutions
+
 SCREEN_WIDTH = 1900
 SCREEN_HEIGHT = 900
-
 resolution = (SCREEN_WIDTH, SCREEN_HEIGHT)
-
-# Stworzenie okna
 screen = pygame.display.set_mode(resolution)
 screen_menu = pygame.display.set_mode(resolution)
-
-# Tytuł
 pygame.display.set_caption("Obsesion")
 
-# Ilość kafelek dzielących mape
-TILE_SIZE = 100
-
-# Assety
+# Assets
 
 start_button_img = pygame.image.load("assets/start_button_menu.png")
 exit_button_img = pygame.image.load("assets/quit_button_menu.png")
 
-# strzelanie
+# Shooting
 
+SHOOT_DELAY = 0.1
+shooting = False
+is_ready_shooting = True
+last_shot_time_main_weapon = 0
+out_of_main_ammo = False
 
-# zmienne globalne do wszystkiego
+# Global variables for game
 
 play_menu_theme_music = True
-
-
+pygame.font.init()
+font = pygame.font.SysFont(None, 64)
+TILE_SIZE = 100
 
 # Mapa z kafelek level 1
 

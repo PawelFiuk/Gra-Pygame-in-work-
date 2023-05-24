@@ -56,6 +56,7 @@ class Enemy:
             self.health = 0
 
     def draw(self):
-        pygame.draw.circle(window, (255, 0, 0), (self.x, self.y), 20)
-        pygame.draw.rect(window, (0, 255, 0), (self.x - 20, self.y - 30, 40, 10))
-        pygame.draw.rect(window, (255, 0, 0), (self.x - 20, self.y - 30, 40 * (1 - self.health / self.max_health), 10))
+        pygame.draw.circle(settings_file.screen, (255, 0, 0), (self.x, self.y), 20)
+        pygame.draw.rect(settings_file.screen, (0, 255, 0), (self.x - 20, self.y - 30, 40, 10))
+        pygame.draw.rect(settings_file.screen, (255, 0, 0),
+                         (self.x - 20, self.y - 30, 40 * (1 - self.health / self.max_health), 10))

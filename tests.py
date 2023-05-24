@@ -1,6 +1,7 @@
 import settings_file
 import pygame
 
+
 # narysowanie siatki na kafelkach
 def test_draw_grid_tile():
     for line in range(0, 16):
@@ -10,8 +11,6 @@ def test_draw_grid_tile():
                          (line * settings_file.TILE_SIZE, settings_file.SCREEN_HEIGHT))
 
 # narysowanie kwadratu na postaci
-
-
 def test_draw_rect_player():
     pass
 

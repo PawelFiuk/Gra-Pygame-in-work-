@@ -14,6 +14,7 @@ class Menu:
         pygame.display.set_caption("Obsesion")
         sound.main_menu_music()
 
+
     def draw(self):
         #screen_menu.blit(self.bg_menu, (0, 0))
         self.running_menu = True

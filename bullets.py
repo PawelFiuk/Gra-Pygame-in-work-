@@ -15,7 +15,7 @@ class Bullets(pygame.sprite.Sprite):
         self.rect = self.bullet_image.get_rect(center=(position[0], position[1]))
 
     def update(self):
-        self.rect.x += 5
+        self.rect.x += 15
 
 
 

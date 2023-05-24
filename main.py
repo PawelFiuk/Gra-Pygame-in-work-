@@ -10,31 +10,27 @@ import sound
 from settings_file import *
 
 
-# Inicjalizacja gry
+# Initialisation of game
 pygame.init()
 
 
 running_game = False
 running_menu = True
 
-# grupy
+# Groups
 bullet_groups = pygame.sprite.Group()
 
-SHOOTING = False
-IS_READY_SHOOTING = True
-LAST_SHOT_TIME = 0
-SHOOT_DELAY = 1
 
-# Główna linia gry
+# Main line of game
 while running_menu:
     menu_init = new_menu_file.Menu()
     menu_init.draw()
 
     if menu_init.draw():
-        sound.stop_main_menu_music()
+        sound.stop_main_music()
         world = world_file.World(world_data)
         player = player_file.Player(100, SCREEN_HEIGHT - 600)
-        enemy_1 = enemy.EnemyBlueGhost(1200, SCREEN_HEIGHT - 400)
+        enemy_1 = enemy.EnemyBlueGhost(1200, SCREEN_HEIGHT - 1200)
 
         running_game = True
         key = pygame.key.get_pressed()
@@ -50,17 +46,21 @@ while running_menu:
                     running_game = False
                     running_menu = False
 
-            if IS_READY_SHOOTING:
+            if is_ready_shooting:
                 if pygame.key.get_pressed()[pygame.K_c]:
 
-                    if current_time - LAST_SHOT_TIME > SHOOT_DELAY:
-                        last_shot_time = current_time
+                    if current_time - last_shot_time_main_weapon > SHOOT_DELAY:
+                        sound.shotgun_sound()
+                        last_shot_time_main_weapon = current_time
                         bullet_groups.add(player.shot_bullet())
-                        IS_READY_SHOOTING = False
+                        player.main_ammo_magazine -= 1
+                        if player.main_ammo_magazine < 1:
+                            out_of_main_ammo = True
+                        is_ready_shooting = False
 
-                    if not IS_READY_SHOOTING and current_time - LAST_SHOT_TIME > SHOOT_DELAY:
-                        IS_READY_SHOOTING = True
-
+            if not is_ready_shooting and current_time - last_shot_time_main_weapon > SHOOT_DELAY \
+                    and not out_of_main_ammo:
+                is_ready_shooting = True
 
             CLOCK.tick(FPS)
             world.draw()
@@ -70,6 +70,7 @@ while running_menu:
             player.draw()
             bullet_groups.draw(screen)
             player.health_bar()
+            player.main_ammo()
             enemy_1.draw(screen)
             play_menu_theme_music = False
             pygame.display.flip()
