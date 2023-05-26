@@ -8,18 +8,19 @@ import enemy
 import world_file
 import sound
 from settings_file import *
+#import pause_menu
 
 
 # Initialisation of game
+
 pygame.init()
-
-
 running_game = False
 running_menu = True
 
 # Groups
-bullet_groups = pygame.sprite.Group()
 
+bullet_groups = pygame.sprite.Group()
+paused = False
 
 # Main line of game
 while running_menu:
@@ -40,11 +41,12 @@ while running_menu:
             for event in pygame.event.get():
 
                 if event.type == pygame.QUIT:
-                    running_game = False
-                    running_menu = False
+                    pygame.quit()
                 elif pygame.key.get_pressed()[pygame.K_ESCAPE]:
-                    running_game = False
-                    running_menu = False
+                    paused = True
+
+            if paused:
+                screen.fill([255, 0, 0])
 
             if is_ready_shooting:
                 if pygame.key.get_pressed()[pygame.K_c]:
