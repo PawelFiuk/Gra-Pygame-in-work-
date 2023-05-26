@@ -20,7 +20,6 @@ running_menu = True
 # Groups
 
 bullet_groups = pygame.sprite.Group()
-paused = False
 
 # Main line of game
 while running_menu:
@@ -40,13 +39,8 @@ while running_menu:
             current_time = time.time()
             for event in pygame.event.get():
 
-                if event.type == pygame.QUIT:
+                if event.type == pygame.QUIT or pygame.key.get_pressed()[pygame.K_ESCAPE]:
                     pygame.quit()
-                elif pygame.key.get_pressed()[pygame.K_ESCAPE]:
-                    paused = True
-
-            if paused:
-                screen.fill([255, 0, 0])
 
             if is_ready_shooting:
                 if pygame.key.get_pressed()[pygame.K_c]:
