@@ -32,7 +32,7 @@ while running_menu:
 
     if menu_init.draw():
         sound.stop_main_menu_music()
-        world = world_file.World(world_data)
+        world = world_file.World(1)
         player = player_file.Player(100, SCREEN_HEIGHT - 600)
         enemy_1 = enemy.EnemyBlueGhost(1200, SCREEN_HEIGHT - 400)
 
