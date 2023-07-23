@@ -1,6 +1,6 @@
 import pygame
 import math
-import settings_file
+from settings_file import  *
 
 
 class EnemyBlueGhost:
@@ -9,9 +9,18 @@ class EnemyBlueGhost:
         self.y = y
         blue_ghost_img = pygame.image.load("assets/enemy/enemy_1.png").convert_alpha()
         self.image = pygame.transform.scale(blue_ghost_img, (400, 400)).convert_alpha()
+        self.atack_area = 150
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
 
     def draw(self, window):
+        self.x -= scroll_position_of_player[0]
+        self.y -= scroll_position_of_player[1]
         window.blit(self.image, (self.x, self.y))
+
+    def atack_player(self):
+        return True
 
 
 class Enemy:
@@ -34,21 +43,6 @@ class Enemy:
         else:
             self.attack(player)
 
-    def move(self):
-        # Przemieszczenie przeciwnika w przypadkowym kierunku
-        self.x += self.speed * math.cos(pygame.time.get_ticks() / 1000)
-        self.y += self.speed * math.sin(pygame.time.get_ticks() / 1000)
-
-    def can_see_player(self, player):
-        # Obliczenie odległości między przeciwnikiem a graczem
-        distance = math.sqrt((player.x - self.x) ** 2 + (player.y - self.y) ** 2)
-        return distance <= self.distance_threshold
-
-    def attack(self, player):
-        # Obliczenie odległości między przeciwnikiem a graczem
-        distance = math.sqrt((player.x - self.x) ** 2 + (player.y - self.y) ** 2)
-        if distance <= self.attack_range:
-            player.take_damage(self.attack_damage)
 
     def take_damage(self, damage):
         self.health -= damage
@@ -56,7 +50,8 @@ class Enemy:
             self.health = 0
 
     def draw(self):
-        pygame.draw.circle(settings_file.screen, (255, 0, 0), (self.x, self.y), 20)
-        pygame.draw.rect(settings_file.screen, (0, 255, 0), (self.x - 20, self.y - 30, 40, 10))
-        pygame.draw.rect(settings_file.screen, (255, 0, 0),
-                         (self.x - 20, self.y - 30, 40 * (1 - self.health / self.max_health), 10))
+        self.x -= scroll_position_of_player[0]
+        self.y -= scroll_position_of_player[1]
+        screen.blit(self.image, (self.x, self.y))
+
+

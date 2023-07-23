@@ -28,13 +28,9 @@ def running_game(running_menu):
                 current_time = time.time()
                 for event in pygame.event.get():
 
-                    if event.type == pygame.QUIT:
+                    if event.type == pygame.QUIT or pygame.key.get_pressed()[pygame.K_ESCAPE]:
                         pygame.quit()
-                    elif pygame.key.get_pressed()[pygame.K_ESCAPE]:
-                        paused = True
 
-                if paused:
-                    screen.fill([255, 0, 0])
 
                 if is_ready_shooting:
                     if pygame.key.get_pressed()[pygame.K_c]:

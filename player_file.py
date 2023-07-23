@@ -101,8 +101,6 @@ class Player(pygame.sprite.Sprite):
         if self.rect.x >= resolution[0] / 2:
             x_screen = resolution[0] / 2
             self.rect.x = x_screen
-            from main import world
-            # world.x_cord -= change_position_x_player
             scroll_position_of_player[0] = change_position_x_player
 
             # self.rect.x -= change_position_x_player
@@ -111,6 +109,17 @@ class Player(pygame.sprite.Sprite):
             self.rect.x = x_screen_left
             scroll_position_of_player[0] = 0
             scroll_position_of_player[0] -= -change_position_x_player
+
+        #if self.rect.top + 200 >= resolution[1] - 750:
+        #    y_screen = resolution[1] - 300
+       #     self.rect.top = y_screen
+       #     scroll_position_of_player[1] = change_position_y_player
+
+        #elif self.rect.y <= resolution[1] - 800:
+        #    y_screen_down = resolution[1] - 800
+        #    self.rect.y = y_screen_down
+        #    scroll_position_of_player[1] = 0
+        #    scroll_position_of_player[1] -= -change_position_x_player
 
         # else:
         #    x_screen = self.rect.x
