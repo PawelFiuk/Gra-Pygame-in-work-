@@ -38,8 +38,12 @@ pygame.font.init()
 font = pygame.font.SysFont(None, 64)
 TILE_SIZE = 100
 dialogue_font = pygame.font.SysFont(None, 16)
+dialogue_switch = False
 
-# Mapa z kafelek level 1
+# Global variables for player
+flipped_player_global = False
+
+# World map level 1
 
 world_data = (
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],

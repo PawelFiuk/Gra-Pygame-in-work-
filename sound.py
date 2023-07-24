@@ -20,5 +20,3 @@ def level_one_first_song():
 def shotgun_sound():
     mixer.music.load("assets/shotgun_2.mp3")
     mixer.music.play()
-
-

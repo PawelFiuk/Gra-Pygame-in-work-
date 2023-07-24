@@ -6,10 +6,9 @@ from pygame import mixer
 
 class Menu:
     def __init__(self):
-
         self.running_menu = True
         self.bg_menu = pygame.image.load("assets/menu_bg.png").convert_alpha()
-        self.main_text = pygame.image.load("assets/main_text.png").convert_alpha()
+        self.main_text = pygame.image.load("assets/steampunk_text.png").convert_alpha()
         self.bg_menu = pygame.transform.scale(self.bg_menu, (1900, 900)).convert_alpha()
         pygame.display.set_caption("Steampunk")
         try:
@@ -17,12 +16,9 @@ class Menu:
         except:
             pass
 
-
     def draw(self):
-        #screen_menu.blit(self.bg_menu, (0, 0))
         self.running_menu = True
         button_start = button.Button(0, 500, start_button_img, 0.8)
-
         button_quit = button.Button(60, 700, exit_button_img, 0.025)
 
         while self.running_menu:

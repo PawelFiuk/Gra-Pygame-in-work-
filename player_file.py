@@ -12,8 +12,8 @@ import time
 class Player(pygame.sprite.Sprite):
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
-        IMAGE_AUGUSTUS = pygame.image.load('Augustus IV wersja 4.png').convert_alpha()
-        self.image = pygame.transform.scale(IMAGE_AUGUSTUS, (400, 400)).convert_alpha()
+        image_augustus = pygame.image.load('Augustus_IV.png').convert_alpha()
+        self.image = pygame.transform.scale(image_augustus, (400, 400)).convert_alpha()
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
@@ -33,7 +33,7 @@ class Player(pygame.sprite.Sprite):
         change_position_x_player = 0
         change_position_y_player = 0
 
-        # sterowanie klawiszami i szybkość poruszania się
+        # moving player and setting speed of movement
         key = pygame.key.get_pressed()
 
         if key[pygame.K_SPACE] and self.jumper == "ready" or key[pygame.K_UP] and \
@@ -59,25 +59,22 @@ class Player(pygame.sprite.Sprite):
             if self.current_health >= self.max_health:
                 self.current_health = self.max_health
 
-        # dodanie grawitacji
+        # adding gravity
         self.velocity_y += 0.2
+        #print(self.velocity_y)
         if self.velocity_y > 120:
             self.velocity_y = change_position_y_player
         change_position_y_player += self.velocity_y
 
-        # sprawdzanie kolizji
-        from main import world # import lokalny obiektu z pliku main
+        # checking collisions
+        from main import world
         for tile in world.tile_list:
-            # sprawdzanie kolizji w osi x
+            # checking collisions in x axis
             if tile[1].colliderect(self.rect.x + change_position_x_player, self.rect.y + change_position_y_player, self.width, self.height):
                 change_position_x_player = 0
 
-            """if player.rect.x >= background_x-100:
-                background_x += 100"""
-
-            # sprawdzanie kolizji w osi y
+            # checking collisions in y axis
             if tile[1].colliderect(self.rect.x, self.rect.y + change_position_y_player, self.width, self.height):
-                # sprawdz czy pod ziemia skaka
                 if self.velocity_y < 0:
                     change_position_y_player = tile[1].bottom - self.rect.top
                     self.velocity_y = 0
@@ -87,16 +84,16 @@ class Player(pygame.sprite.Sprite):
                     self.velocity_y = 0
                     self.jumper = 'ready'
 
-        # update koordynatów gracz
+        # update of player x and y coordinates
         self.rect.x += change_position_x_player
         self.rect.y += change_position_y_player
-        # print(self.rect.x, self.rect.y)
+
 
         if self.rect.bottom >= SCREEN_HEIGHT:
             self.rect.bottom = tile[1].bottom
             self.jumper = "ready"
 
-        # Przewijanie tła
+        # scrolling background
 
         if self.rect.x >= resolution[0] / 2:
             x_screen = resolution[0] / 2
@@ -110,22 +107,6 @@ class Player(pygame.sprite.Sprite):
             scroll_position_of_player[0] = 0
             scroll_position_of_player[0] -= -change_position_x_player
 
-        #if self.rect.top + 200 >= resolution[1] - 750:
-        #    y_screen = resolution[1] - 300
-       #     self.rect.top = y_screen
-       #     scroll_position_of_player[1] = change_position_y_player
-
-        #elif self.rect.y <= resolution[1] - 800:
-        #    y_screen_down = resolution[1] - 800
-        #    self.rect.y = y_screen_down
-        #    scroll_position_of_player[1] = 0
-        #    scroll_position_of_player[1] -= -change_position_x_player
-
-        # else:
-        #    x_screen = self.rect.x
-        #    self.rect.x = x_screen
-
-        # pygame.draw.rect(screen, (255, 255, 255), self.rect, 2)
     def draw(self):
         screen.blit(pygame.transform.flip(self.image, self.flip, False), self.rect)
 
@@ -140,6 +121,12 @@ class Player(pygame.sprite.Sprite):
         return [self.rect.x / 2], [self.rect.y]
 
     def shot_bullet(self):
-        pos_x = self.rect.x
-        pos_y = self.rect.y
-        return Bullets([pos_x + 500, pos_y + 220])
+        if not self.flip:
+            pos_x = self.rect.x
+            pos_y = self.rect.y
+            return Bullets([pos_x + 500, pos_y + 220], False)
+
+        if self.flip:
+            pos_x = self.rect.x
+            pos_y = self.rect.y
+            return Bullets([pos_x - 100, pos_y + 220], True)
