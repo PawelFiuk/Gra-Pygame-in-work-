@@ -1,18 +1,17 @@
 import pygame.sprite
-from settings_file import *
+from settings import *
 from bullets import Bullets
-import time
-
 """
     This class contains main functionality for player.
     
+
 """
 
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
-        image_augustus = pygame.image.load('Augustus_IV.png').convert_alpha()
+        image_augustus = pygame.image.load('assets/Augustus_IV.png').convert_alpha()
         self.image = pygame.transform.scale(image_augustus, (400, 400)).convert_alpha()
         self.rect = self.image.get_rect()
         self.rect.x = x
@@ -27,14 +26,14 @@ class Player(pygame.sprite.Sprite):
         self.health_bar_length = 300
         self.health_ratio = self.max_health / self.health_bar_length
         self.main_ammo_magazine = 20
+        self.falling = True
+
 
     def update(self):
-        global tile
-        change_position_x_player = 0
-        change_position_y_player = 0
-
         # moving player and setting speed of movement
         key = pygame.key.get_pressed()
+        change_position_x_player = 0
+        change_position_y_player = 0
 
         if key[pygame.K_SPACE] and self.jumper == "ready" or key[pygame.K_UP] and \
                 self.jumper == "ready" or key[pygame.K_w] and self.jumper == "ready":
@@ -60,10 +59,12 @@ class Player(pygame.sprite.Sprite):
                 self.current_health = self.max_health
 
         # adding gravity
-        self.velocity_y += 0.2
-        #print(self.velocity_y)
-        if self.velocity_y > 120:
-            self.velocity_y = change_position_y_player
+        if self.falling:
+            self.velocity_y += 0.2
+
+        if self.velocity_y == -10:
+            self.falling = True
+
         change_position_y_player += self.velocity_y
 
         # checking collisions
@@ -72,22 +73,17 @@ class Player(pygame.sprite.Sprite):
             # checking collisions in x axis
             if tile[1].colliderect(self.rect.x + change_position_x_player, self.rect.y + change_position_y_player, self.width, self.height):
                 change_position_x_player = 0
-
             # checking collisions in y axis
             if tile[1].colliderect(self.rect.x, self.rect.y + change_position_y_player, self.width, self.height):
-                if self.velocity_y < 0:
-                    change_position_y_player = tile[1].bottom - self.rect.top
-                    self.velocity_y = 0
-                # sprawdz czy pod ziemia spada
-                elif self.velocity_y >= 0:
+                if self.velocity_y >= 0:
                     change_position_y_player = tile[1].top - self.rect.bottom
                     self.velocity_y = 0
                     self.jumper = 'ready'
+                    self.falling = False
 
         # update of player x and y coordinates
         self.rect.x += change_position_x_player
         self.rect.y += change_position_y_player
-
 
         if self.rect.bottom >= SCREEN_HEIGHT:
             self.rect.bottom = tile[1].bottom
@@ -106,7 +102,8 @@ class Player(pygame.sprite.Sprite):
             self.rect.x = x_screen_left
             scroll_position_of_player[0] = 0
             scroll_position_of_player[0] -= -change_position_x_player
-
+    def move(self):
+        pass
     def draw(self):
         screen.blit(pygame.transform.flip(self.image, self.flip, False), self.rect)
 

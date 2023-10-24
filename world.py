@@ -1,6 +1,6 @@
 from pygame import key
 
-from settings_file import *
+from settings import *
 
 
 class World:

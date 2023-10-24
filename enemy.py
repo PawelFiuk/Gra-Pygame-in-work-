@@ -1,9 +1,9 @@
 import pygame
 import math
-from settings_file import  *
+from settings import  *
 
 
-class EnemyBlueGhost:
+class EnemyBlueGhost(pygame.sprite.Sprite):
     def __init__(self, x, y):
         self.x = x
         self.y = y

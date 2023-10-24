@@ -1,4 +1,4 @@
-from settings_file import *
+from settings import *
 
 
 class Bullets(pygame.sprite.Sprite):

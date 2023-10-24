@@ -1,4 +1,4 @@
-import settings_file
+import settings
 import pygame
 from pygame import mixer
 

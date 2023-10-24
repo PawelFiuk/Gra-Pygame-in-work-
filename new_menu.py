@@ -1,4 +1,4 @@
-from settings_file import *
+from settings import *
 import button
 import sound
 from pygame import mixer

@@ -15,7 +15,9 @@ SCREEN_HEIGHT = 900
 resolution = (SCREEN_WIDTH, SCREEN_HEIGHT)
 screen = pygame.display.set_mode(resolution)
 screen_menu = pygame.display.set_mode(resolution)
-pygame.display.set_caption("Obsesion")
+pygame.display.set_caption("Steampunk")
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
 
 # Assets
 
