@@ -1,5 +1,3 @@
-import settings
-import pygame
 from pygame import mixer
 
 
@@ -16,7 +14,16 @@ def stop_main_music():
 def level_one_first_song():
     pass
 
+def wind_outside_sound():
+    wind_sound = mixer.Sound("assets/music/wind-outside-sound-ambient.mp3")
+    wind_sound_channel = mixer.Channel(0)
+    wind_sound_channel.play(wind_sound, -1)
 
 def shotgun_sound():
-    mixer.music.load("assets/shotgun_2.mp3")
+    shotgun_soundd = mixer.Sound("assets/shotgun_2.mp3")
+    shotgun_sound_channel = mixer.Channel(1)
+    shotgun_sound_channel.play(shotgun_soundd)
+
+def empty_magazine_sound():
+    mixer.music.load("assets/empty-gun-shot.mp3")
     mixer.music.play()
