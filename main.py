@@ -7,7 +7,7 @@ from pause_menu import *
 import npc
 import gameover_menu
 from settings import *
-
+import airplane
 
 # Initialisation of game
 
@@ -34,6 +34,7 @@ while running_menu:
         enemies_group.add(enemy_1)
         npc_1 = npc.NPC(300, SCREEN_HEIGHT - 800, "assets/npc/npc_dirty.png")
         running_game = True
+        airplane_level_1 = airplane.Airplane(3500, SCREEN_HEIGHT - 800, "assets/graphics/ship.png")
 
         if player not in all_sprites:
             all_sprites.add(player)
@@ -107,5 +108,6 @@ while running_menu:
             bullet_groups.draw(screen)
             enemy_1.update()
             npc_1.update(screen)
+            airplane_level_1.update(screen)
 
             pygame.display.flip()

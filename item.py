@@ -3,7 +3,7 @@ import pygame
 
 class Item:
     def __init__(self, x: int, y: int, name: str):
-        item_image = pygame.image.load('assets/Augustus_IV.png').convert_alpha()
+        item_image = pygame.image.load('assets/graphics/augustus/Augustus_IV.png').convert_alpha()
         self.image = pygame.transform.scale(item_image, (75, 50)).convert_alpha()
         self.rect = self.image.get_rect()
         self.rect.x = x

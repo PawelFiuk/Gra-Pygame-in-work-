@@ -23,7 +23,7 @@ def pause_menu_screen():
                     return paused
 
         screen.fill([100, 100, 100])
-        pause_text = pygame.image.load("assets/pause_text.png").convert_alpha()
+        pause_text = pygame.image.load("assets/graphics/pause_text.png").convert_alpha()
         screen_menu.blit(pause_text, (800, 100))
         button_start = button.Button(0, 500, start_button_img, 0.8)
         button_quit = button.Button(60, 850, exit_button_img, 0.025)

@@ -3,7 +3,7 @@ from pygame import mixer
 
 def main_menu_music():
     #mixer.init()
-    mixer.music.load("assets/Phonothek_Red_Moon.mp3")
+    mixer.music.load("assets/music/Phonothek_Red_Moon.mp3")
     mixer.music.play(-1)
 
 
@@ -20,10 +20,10 @@ def wind_outside_sound():
     wind_sound_channel.play(wind_sound, -1)
 
 def shotgun_sound():
-    shotgun_soundd = mixer.Sound("assets/shotgun_2.mp3")
+    shotgun_soundd = mixer.Sound("assets/music/sound_efects/shotgun_2.mp3")
     shotgun_sound_channel = mixer.Channel(1)
     shotgun_sound_channel.play(shotgun_soundd)
 
 def empty_magazine_sound():
-    mixer.music.load("assets/empty-gun-shot.mp3")
+    mixer.music.load("assets/music/sound_efects/empty-gun-shot.mp3")
     mixer.music.play()

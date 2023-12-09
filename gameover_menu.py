@@ -14,7 +14,7 @@ def draw_gameover_menu():
                 return paused
 
         screen.fill([90, 90, 90])
-        gameover_image = pygame.image.load("assets/gameover_background.jpg").convert_alpha()
+        gameover_image = pygame.image.load("assets/graphics/gameover_background.jpg").convert_alpha()
         gameover_scaled_image = pygame.transform.scale(gameover_image, (SCREEN_WIDTH, SCREEN_HEIGHT)).convert_alpha()
         screen_menu.blit(gameover_scaled_image, (0, 0))
         button_quit = button.Button(60, 700, exit_button_img, 0.025)

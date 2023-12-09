@@ -28,9 +28,10 @@ BLACK = (0, 0, 0)
 
 # Assets
 
-start_button_img = pygame.image.load("assets/start_button_menu.png")
-exit_button_img = pygame.image.load("assets/quit_button_menu.png")
+start_button_img = pygame.image.load("assets/graphics/start_button_menu.png")
+exit_button_img = pygame.image.load("assets/graphics/quit_button_menu.png")
 npc_1_image = pygame.image.load("assets/npc/npc_dirty.png")
+airplane_image_asset = pygame.image.load("assets/graphics/ship.png")
 
 # Music
 mixer.init()
@@ -55,7 +56,7 @@ dialogue_font = pygame.font.SysFont(None, 16)
 dialogue_switch = False
 current_time = time.time()
 last_esc_time = 0
-
+is_player_in_airplane = False
 
 # Global variables for player
 flipped_player_global = False

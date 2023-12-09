@@ -10,7 +10,7 @@ class Bullets(pygame.sprite.Sprite):
         Return: None
         """
         pygame.sprite.Sprite.__init__(self)
-        self.bullet_image = pygame.image.load('assets/bullet.png').convert_alpha()
+        self.bullet_image = pygame.image.load('assets/graphics/bullet.png').convert_alpha()
         self.image = pygame.transform.scale(self.bullet_image, (100, 40)).convert_alpha()
         self.rect = self.image.get_rect()
         self.rect.x = position[0]

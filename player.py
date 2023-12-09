@@ -17,7 +17,7 @@ class Player(pygame.sprite.Sprite):
         Return: None
         """
         pygame.sprite.Sprite.__init__(self)
-        image_augustus = pygame.image.load('assets/SteamMan.png').convert_alpha()
+        image_augustus = pygame.image.load('assets/graphics/augustus/SteamMan.png').convert_alpha()
         self.image = pygame.transform.scale(image_augustus, (400, 400)).convert_alpha()
         self.image_idle = pygame.transform.scale(image_augustus, (400, 400)).convert_alpha()
         self.rect = self.image.get_rect()
@@ -44,9 +44,9 @@ class Player(pygame.sprite.Sprite):
         self.idle_animation_triggered = False
 
         # Load the sprite sheet with animation frames
-        self.movement_sprite_sheet = pygame.image.load('assets/SteamMan_run.png').convert_alpha()
-        self.idle_sprite_sheet = pygame.image.load('assets/SteamMan.png').convert_alpha()
-        self.jump_sprite_sheet = pygame.image.load('assets/SteamMan_jump.png').convert_alpha()
+        self.movement_sprite_sheet = pygame.image.load('assets/graphics/augustus/SteamMan_run.png').convert_alpha()
+        self.idle_sprite_sheet = pygame.image.load('assets/graphics/augustus/SteamMan.png').convert_alpha()
+        self.jump_sprite_sheet = pygame.image.load('assets/graphics/augustus/SteamMan_jump.png').convert_alpha()
 
         self.frame_width = self.movement_sprite_sheet.get_width() // 6  # Assuming 6 frames in a row
         self.frame_height = self.movement_sprite_sheet.get_height()
@@ -68,7 +68,7 @@ class Player(pygame.sprite.Sprite):
 
         self.current_animation = 'idle'  # Default animation
         self.current_frame = 0  # Current frame index
-        self.animation_speed = 2  # Adjust the speed as needed
+        self.animation_speed = 1  # Adjust the speed as needed
 
         self.image = self.animation_frames[self.current_animation][self.current_frame]
 
@@ -89,21 +89,21 @@ class Player(pygame.sprite.Sprite):
         self.change_position_x_player = 0
         self.change_position_y_player = 0
 
-        if key[pygame.K_a] or key[pygame.K_LEFT]:
+        if key[pygame.K_a]:
             self.change_position_x_player -= 4
             self.flip = True
             self.current_animation = 'walk'
             if self.change_position_x_player != 0:
                 self.animate()
 
-        elif key[pygame.K_d] or key[pygame.K_RIGHT]:
+        elif key[pygame.K_d]:
             self.change_position_x_player += 4
             self.flip = False
             self.current_animation = 'walk'
             if self.change_position_x_player != 0:
                 self.animate()
 
-        elif key[pygame.K_SPACE] and self.jumper == "ready" or key[pygame.K_UP] and self.jumper == "ready" or key[
+        elif key[pygame.K_SPACE] and self.jumper == "ready" or key[
             pygame.K_w] and self.jumper == "ready":
             self.velocity_y = -10
             self.jumper = "jumping"

@@ -6,8 +6,8 @@ import sound
 class Menu:
     def __init__(self):
         self.running_menu = True
-        self.bg_menu = pygame.image.load("assets/menu_bg.png").convert_alpha()
-        self.main_text = pygame.image.load("assets/steampunk_text.png").convert_alpha()
+        self.bg_menu = pygame.image.load("assets/graphics/menu_bg.png").convert_alpha()
+        self.main_text = pygame.image.load("assets/graphics/steampunk_text.png").convert_alpha()
         self.bg_menu = pygame.transform.scale(self.bg_menu, (SCREEN_WIDTH, SCREEN_HEIGHT)).convert_alpha()
         pygame.display.set_caption("Steampunk")
         try:
