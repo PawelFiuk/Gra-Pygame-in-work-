@@ -9,7 +9,7 @@ scroll_position_of_player = [0, 0]
 # Refreshing of game
 
 CLOCK = pygame.time.Clock()
-FPS = 200
+FPS = 60
 
 # Window resolutions
 

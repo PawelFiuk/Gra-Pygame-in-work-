@@ -33,7 +33,6 @@ class World:
                     self.tile_list.append(tile)
                 col_count += 1
             self.row_count += 1
-            print(self.tile_list)
 
     def draw(self):
         screen.blit(self.bg_background, (self.x_cord, self.y_cord))

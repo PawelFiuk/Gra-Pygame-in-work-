@@ -33,6 +33,7 @@ class Player(pygame.sprite.Sprite):
         self.health_bar_length = 300
         self.health_ratio = self.max_health / self.health_bar_length
         self.main_ammo_magazine = 20
+        self.max_main_ammo_magazine = 20
         self.falling = True
         self.change_position_x_player = 0
         self.change_position_y_player = 0
@@ -50,6 +51,7 @@ class Player(pygame.sprite.Sprite):
 
         self.frame_width = self.movement_sprite_sheet.get_width() // 6  # Assuming 6 frames in a row
         self.frame_height = self.movement_sprite_sheet.get_height()
+        self.last_walk_animation_time = pygame.time.get_ticks()
 
         self.animation_frames = {
             'idle': [pygame.transform.scale(
@@ -68,7 +70,7 @@ class Player(pygame.sprite.Sprite):
 
         self.current_animation = 'idle'  # Default animation
         self.current_frame = 0  # Current frame index
-        self.animation_speed = 1  # Adjust the speed as needed
+        #self.animation_speed = 100000  # Adjust the speed as needed
 
         self.image = self.animation_frames[self.current_animation][self.current_frame]
 
@@ -97,11 +99,16 @@ class Player(pygame.sprite.Sprite):
                 self.animate()
 
         elif key[pygame.K_d]:
+
             self.change_position_x_player += 4
+
             self.flip = False
-            self.current_animation = 'walk'
+
             if self.change_position_x_player != 0:
-                self.animate()
+                current_time_for_animation = pygame.time.get_ticks()
+                if current_time_for_animation - self.last_walk_animation_time > 100:  # 200 milisekund (0.2 sekundy)
+                    self.last_walk_animation_time = current_time_for_animation
+                    self.animate()
 
         elif key[pygame.K_SPACE] and self.jumper == "ready" or key[
             pygame.K_w] and self.jumper == "ready":
@@ -231,9 +238,11 @@ class Player(pygame.sprite.Sprite):
     def animate(self):
         if self.is_jumping:
             elapsed_time = time.time() - self.jump_start_time
-            jump_animation_speed = 12  # Dopasuj szybkość animacji skoku
+            jump_animation_speed = 6  # Dopasuj szybkość animacji skoku
             jump_frame_index = int(elapsed_time * jump_animation_speed) % len(self.animation_frames['jump'])
             self.image = self.animation_frames['jump'][jump_frame_index]
+            if self.is_jumping and (jump_frame_index == 3):
+                self.image = self.animation_frames['jump'][3]
         else:
             self.current_frame = (self.current_frame + 1) % len(self.animation_frames[self.current_animation])
             self.image = self.animation_frames[self.current_animation][self.current_frame]
