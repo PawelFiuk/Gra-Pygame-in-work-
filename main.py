@@ -11,6 +11,7 @@ import gameover_menu
 from settings import *
 import airplane
 import ammunition_package
+import first_aid_kit
 
 # Initialisation of game
 
@@ -24,6 +25,7 @@ all_sprites = pygame.sprite.Group()
 bullet_groups = pygame.sprite.Group()
 enemies_group = pygame.sprite.Group()
 ammo_package_group = pygame.sprite.Group()
+aid_kit_group = pygame.sprite.Group()
 
 # Main line of game
 while running_menu:
@@ -40,6 +42,10 @@ while running_menu:
         running_game = True
         airplane_level_1 = airplane.Airplane(3500, SCREEN_HEIGHT - 800, "assets/graphics/ship.png")
         ammo_package_level_1_1 = ammunition_package.AmmunitionPackage( 2000 , SCREEN_HEIGHT - 300)
+        aid_kit_1 = first_aid_kit.FirstAidKit(1500,SCREEN_HEIGHT - 300 )
+
+        if aid_kit_1 not in aid_kit_group:
+            aid_kit_group.add(aid_kit_1)
 
         if ammo_package_level_1_1 not in ammo_package_group:
             ammo_package_group.add(ammo_package_level_1_1)
@@ -99,8 +105,10 @@ while running_menu:
             if player.rect.colliderect(ammo_package_level_1_1):
                 ammo_package_level_1_1.action_ammo(player)
                 ammo_package_group.remove(ammo_package_level_1_1)
-                ammo_package_level_1_1.kill()
 
+            if player.rect.colliderect(aid_kit_1):
+                aid_kit_1.action_health(player)
+                aid_kit_group.remove(aid_kit_1)
 
             #sound efects
             if not ambient_music_switch_level_1:
@@ -124,5 +132,6 @@ while running_menu:
             npc_1.update(screen)
             airplane_level_1.update(screen)
             ammo_package_level_1_1.update_package(screen)
+            aid_kit_1.update_package(screen)
 
             pygame.display.flip()

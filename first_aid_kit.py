@@ -1,9 +1,9 @@
 from settings import  *
 
-class AmmunitionPackage(pygame.sprite.Sprite):
+class FirstAidKit(pygame.sprite.Sprite):
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
-        item_image = pygame.image.load('assets/graphics/ammo_package.jpg').convert_alpha()
+        item_image = pygame.image.load('assets/graphics/first_aid_kit.png').convert_alpha()
         self.image = pygame.transform.scale(item_image, (100, 80)).convert_alpha()
         self.rect = self.image.get_rect()
         self.rect.x = x
@@ -21,13 +21,13 @@ class AmmunitionPackage(pygame.sprite.Sprite):
     def draw_item(self, window):
         window.blit(self.image, (self.x, self.y))
 
-    def action_ammo(self, player):
-        if not self.is_take and not player.main_ammo_magazine == 20:
-            remaining_ammo = 20 - player.main_ammo_magazine
-            if remaining_ammo < 5:
-                player.main_ammo_magazine = 20
+    def action_health(self, player):
+        if not self.is_take and not player.current_health == 100:
+            remaining_health = 100 - player.current_health
+            if remaining_health < 25:
+                player.current_health = 100
             else:
-                player.main_ammo_magazine += 5
+                player.current_health += 25
             self.is_take = True
             self.kill()
 
