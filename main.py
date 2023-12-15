@@ -40,9 +40,9 @@ while running_menu:
         enemies_group.add(enemy_1)
         npc_1 = npc.NPC(300, SCREEN_HEIGHT - 200, "assets/npc/npc_dirty.png")
         running_game = True
-        airplane_level_1 = airplane.Airplane(3500, SCREEN_HEIGHT - 800, "assets/graphics/ship.png")
-        ammo_package_level_1_1 = ammunition_package.AmmunitionPackage( 2000 , SCREEN_HEIGHT - 300)
-        aid_kit_1 = first_aid_kit.FirstAidKit(1500,SCREEN_HEIGHT - 300 )
+        airplane_level_1 = airplane.Airplane(3500, SCREEN_HEIGHT - 1000, "assets/graphics/ship.png")
+        ammo_package_level_1_1 = ammunition_package.AmmunitionPackage( 2000 , SCREEN_HEIGHT - 400)
+        aid_kit_1 = first_aid_kit.FirstAidKit(1500,SCREEN_HEIGHT - 400 )
 
         if aid_kit_1 not in aid_kit_group:
             aid_kit_group.add(aid_kit_1)
@@ -70,6 +70,11 @@ while running_menu:
 
                 if event.type == pygame.QUIT:
                     pygame.quit()
+
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_e:
+                        if player.rect.colliderect(airplane_level_1.rect):
+                            player.enter_airplane_mode()
 
             # mechanics of shooting
             if is_ready_shooting:
@@ -130,7 +135,7 @@ while running_menu:
             bullet_groups.draw(screen)
             enemy_1.update()
             npc_1.update(screen)
-            airplane_level_1.update(screen)
+            airplane_level_1.update(screen, player)
             ammo_package_level_1_1.update_package(screen)
             aid_kit_1.update_package(screen)
 

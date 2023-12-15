@@ -16,15 +16,38 @@ class Airplane(pygame.sprite.Sprite):
         self.x = x
         self.y = y
         self.player_in_airplane = False
+        self.change_position_x_airplane = 0
+        self.change_position_y_airplane = 0
 
-    def update(self, window):
+
+
+    def update(self, window, player):
         self.update_camera()
         self.draw(window)
+        self.control(player)
 
     def draw(self, window):
-            window.blit(self.image, (self.x, self.y))
+            window.blit(self.image, (self.rect.x, self.rect.y))
 
     def update_camera(self):
         self.rect.x -= scroll_position_of_player[0]
-        self.x -= scroll_position_of_player[0]
+        self.rect.x += self.change_position_x_airplane
+        self.rect.y += self.change_position_y_airplane
+
+
+
+    def control(self, player):
+        keys = pygame.key.get_pressed()
+
+        self.change_position_x_airplane= 0
+        self.change_position_y_airplane = 0
+
+        if keys[pygame.K_LEFT]:
+            self.rect.x -= 8
+        if keys[pygame.K_RIGHT]:
+            self.change_position_x_airplane += 8
+        if keys[pygame.K_UP]:
+            self.rect.y -= 5
+        if keys[pygame.K_DOWN]:
+            self.rect.y += 5
 

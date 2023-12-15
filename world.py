@@ -20,7 +20,7 @@ class World:
                     dirt_img = pygame.transform.scale(dirt_img, (TILE_SIZE, TILE_SIZE))
                     img_rect_dirt = dirt_img.get_rect()
                     img_rect_dirt.x = col_count * TILE_SIZE
-                    img_rect_dirt.y = self.row_count * TILE_SIZE
+                    img_rect_dirt.y = self.row_count * TILE_SIZE - TILE_SIZE
                     tile = [dirt_img, img_rect_dirt]
                     self.tile_list.append(tile)
 
@@ -28,7 +28,7 @@ class World:
                     stone_img = pygame.transform.scale(stone_img, (TILE_SIZE, TILE_SIZE))
                     img_rect_stone = stone_img.get_rect()
                     img_rect_stone.x = col_count * TILE_SIZE
-                    img_rect_stone.y = self.row_count * TILE_SIZE
+                    img_rect_stone.y = self.row_count * TILE_SIZE - TILE_SIZE
                     tile = [stone_img, img_rect_stone]
                     self.tile_list.append(tile)
                 col_count += 1

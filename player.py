@@ -73,6 +73,7 @@ class Player(pygame.sprite.Sprite):
         #self.animation_speed = 100000  # Adjust the speed as needed
 
         self.image = self.animation_frames[self.current_animation][self.current_frame]
+        self.airplane_mode = False
 
     def update(self):
         self.draw()
@@ -92,7 +93,7 @@ class Player(pygame.sprite.Sprite):
         self.change_position_y_player = 0
 
         if key[pygame.K_a]:
-            self.change_position_x_player -= 4
+            self.change_position_x_player -= 8
             self.flip = True
             self.current_animation = 'walk'
             if self.change_position_x_player != 0:
@@ -100,13 +101,13 @@ class Player(pygame.sprite.Sprite):
 
         elif key[pygame.K_d]:
 
-            self.change_position_x_player += 4
+            self.change_position_x_player += 8
 
             self.flip = False
-
+            self.current_animation = 'walk'
             if self.change_position_x_player != 0:
                 current_time_for_animation = pygame.time.get_ticks()
-                if current_time_for_animation - self.last_walk_animation_time > 100:  # 200 milisekund (0.2 sekundy)
+                if current_time_for_animation - self.last_walk_animation_time > 300:  # 200 milisekund (0.2 sekundy)
                     self.last_walk_animation_time = current_time_for_animation
                     self.animate()
 
@@ -190,11 +191,12 @@ class Player(pygame.sprite.Sprite):
 
     def draw(self):
         """
-        Arguments: self
-        Application: draws the player's character in the game window, after each frame.
-        Return: None
-        """
-        screen.blit(pygame.transform.flip(self.image, self.flip, False), self.rect)
+              Arguments: self
+              Application: draws the player's character in the game window, after each frame.
+              Return: None
+              """
+        if not self.airplane_mode:
+            screen.blit(pygame.transform.flip(self.image, self.flip, False), self.rect)
 
     def health_bar(self):
         """
@@ -238,14 +240,23 @@ class Player(pygame.sprite.Sprite):
     def animate(self):
         if self.is_jumping:
             elapsed_time = time.time() - self.jump_start_time
-            jump_animation_speed = 6  # Dopasuj szybkość animacji skoku
+            jump_animation_speed = 8
             jump_frame_index = int(elapsed_time * jump_animation_speed) % len(self.animation_frames['jump'])
             self.image = self.animation_frames['jump'][jump_frame_index]
             if self.is_jumping and (jump_frame_index == 3):
                 self.image = self.animation_frames['jump'][3]
+
         else:
-            self.current_frame = (self.current_frame + 1) % len(self.animation_frames[self.current_animation])
-            self.image = self.animation_frames[self.current_animation][self.current_frame]
+            current_time = pygame.time.get_ticks()
+            if self.current_animation == 'walk':
+                animation_speed = 85
+                if current_time - self.last_walk_animation_time > animation_speed:
+                    self.last_walk_animation_time = current_time
+                    self.current_frame = (self.current_frame + 1) % len(self.animation_frames[self.current_animation])
+                    self.image = self.animation_frames[self.current_animation][self.current_frame]
+            else:
+                self.current_frame = (self.current_frame + 1) % len(self.animation_frames[self.current_animation])
+                self.image = self.animation_frames[self.current_animation][self.current_frame]
 
     def animate_idle(self):
         # Update the current frame based on the animation speed
@@ -254,4 +265,8 @@ class Player(pygame.sprite.Sprite):
 
     def event(self):
         pass
+
+    def enter_airplane_mode(self):
+        self.airplane_mode = True
+
 
