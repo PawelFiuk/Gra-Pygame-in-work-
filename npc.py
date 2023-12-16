@@ -41,9 +41,8 @@ class NPC:
                 self.draw_dialog()
     def update_camera(self):
         self.rect.x -= scroll_position_of_player[0]
-        self.rect.y -= scroll_position_of_player[1]
         self.x -= scroll_position_of_player[0]
-        self.y -= scroll_position_of_player[1]
+
     def draw_dialog(self):
         rectangle_width, rectangle_height = 200, 100
         rectangle_x, rectangle_y = (SCREEN_WIDTH - rectangle_width) // 2, (SCREEN_HEIGHT - rectangle_height) // 2

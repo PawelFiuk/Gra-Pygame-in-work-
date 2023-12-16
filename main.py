@@ -27,6 +27,23 @@ enemies_group = pygame.sprite.Group()
 ammo_package_group = pygame.sprite.Group()
 aid_kit_group = pygame.sprite.Group()
 
+
+player = player.Player(100, SCREEN_HEIGHT - 800)
+enemy_1 = enemy.EnemyBlueGhost(2500, SCREEN_HEIGHT - 800)
+npc_1 = npc.NPC(300, SCREEN_HEIGHT - 800, "assets/npc/npc_dirty.png")
+airplane_level_1 = airplane.Airplane(3500, SCREEN_HEIGHT - 1000, "assets/graphics/ship.png")
+mech_enemy = enemy.EnemySteamMachine(3000, SCREEN_HEIGHT-1000)
+ammo_package_level_1_1 = ammunition_package.AmmunitionPackage(2000, SCREEN_HEIGHT - 400)
+aid_kit_1 = first_aid_kit.FirstAidKit(1500, SCREEN_HEIGHT - 400)
+
+enemies_group.add(enemy_1)
+enemies_group.add(mech_enemy)
+aid_kit_group.add(aid_kit_1)
+ammo_package_group.add(ammo_package_level_1_1)
+all_sprites.add(player)
+all_sprites.add(enemy_1)
+all_sprites.add(mech_enemy)
+
 # Main line of game
 while running_menu:
     menu_init = new_menu.Menu()
@@ -35,36 +52,14 @@ while running_menu:
     if menu_init.draw():
         sound.stop_main_music()
         world = world.World(world_data)
-        player = player.Player(100, SCREEN_HEIGHT - 800)
-        enemy_1 = enemy.EnemyBlueGhost(2500, SCREEN_HEIGHT - 800)
-        enemies_group.add(enemy_1)
-        npc_1 = npc.NPC(300, SCREEN_HEIGHT - 200, "assets/npc/npc_dirty.png")
         running_game = True
-        airplane_level_1 = airplane.Airplane(3500, SCREEN_HEIGHT - 1000, "assets/graphics/ship.png")
-        ammo_package_level_1_1 = ammunition_package.AmmunitionPackage( 2000 , SCREEN_HEIGHT - 400)
-        aid_kit_1 = first_aid_kit.FirstAidKit(1500,SCREEN_HEIGHT - 400 )
-
-        if aid_kit_1 not in aid_kit_group:
-            aid_kit_group.add(aid_kit_1)
-
-        if ammo_package_level_1_1 not in ammo_package_group:
-            ammo_package_group.add(ammo_package_level_1_1)
-
-        if player not in all_sprites:
-            all_sprites.add(player)
-
-        if enemy_1 not in all_sprites:
-            all_sprites.add(enemy_1)
-
         while running_game:
             current_time = time.time()
-
-            #all_sprites.update()
 
             for event in pygame.event.get():
 
                 if pygame.key.get_pressed()[pygame.K_ESCAPE]:
-                    if current_time - last_esc_time >= 0.5:  # Sprawdź, czy minęła co najmniej 1 sekunda od ostatniego esc
+                    if current_time - last_esc_time >= 0.5:
                         last_esc_time = current_time
                         pause_menu_screen()
 
@@ -74,7 +69,11 @@ while running_menu:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_e:
                         if player.rect.colliderect(airplane_level_1.rect):
+                            airplane_level_1.player_in_airplane = True
                             player.enter_airplane_mode()
+
+                        if player.rect.colliderect(npc_1.rect):
+                            npc_1.dialog_box()
 
             # mechanics of shooting
             if is_ready_shooting:
@@ -97,15 +96,11 @@ while running_menu:
             collisions = pygame.sprite.groupcollide(enemies_group, bullet_groups, False, True)
             for enemy, bullets_hit in collisions.items():
                 for bullet in bullets_hit:
-                    enemy_1.current_health -= 5
+                    enemy.current_health -= 5
 
-                    if enemy_1.checking_is_dead_enemy():
+                    if enemy.checking_is_dead_enemy():
                         enemies_group.remove(enemy)
                         all_sprites.remove(enemy)
-
-            # event for dialogs with npc
-            if pygame.key.get_pressed()[pygame.K_e] and player.rect.colliderect(npc_1.rect):
-                npc_1.dialog_box()
 
             if player.rect.colliderect(ammo_package_level_1_1):
                 ammo_package_level_1_1.action_ammo(player)
@@ -134,6 +129,7 @@ while running_menu:
             bullet_groups.update()
             bullet_groups.draw(screen)
             enemy_1.update()
+            mech_enemy.update(player.rect.x)
             npc_1.update(screen)
             airplane_level_1.update(screen, player)
             ammo_package_level_1_1.update_package(screen)

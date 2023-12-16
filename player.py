@@ -129,8 +129,7 @@ class Player(pygame.sprite.Sprite):
             self.current_health += 1
             self.current_health = min(self.current_health, self.max_health)
 
-        # Update the idle animation only once every 10 seconds
-        if self.change_position_x_player == 0 and not (key[pygame.K_SPACE] or key[pygame.K_UP] or key[pygame.K_w]):
+        if self.change_position_x_player == 0 and not (key[pygame.K_SPACE] or key[pygame.K_w]):
             self.current_animation = 'idle'
             self.animate_idle()
 
@@ -260,8 +259,13 @@ class Player(pygame.sprite.Sprite):
 
     def animate_idle(self):
         # Update the current frame based on the animation speed
-        self.current_frame = (self.current_frame + 1) % len(self.animation_frames[self.current_animation])
-        self.image = self.animation_frames[self.current_animation][self.current_frame]
+        current_time = pygame.time.get_ticks()
+        if self.current_animation == 'idle':
+            animation_speed = 85
+            if current_time - self.last_walk_animation_time > animation_speed:
+                self.last_walk_animation_time = current_time
+                self.current_frame = (self.current_frame + 1) % len(self.animation_frames[self.current_animation])
+                self.image = self.animation_frames[self.current_animation][self.current_frame]
 
     def event(self):
         pass
