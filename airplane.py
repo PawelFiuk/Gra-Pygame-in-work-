@@ -21,11 +21,11 @@ class Airplane(pygame.sprite.Sprite):
 
 
 
-    def update(self, window, player):
+    def update(self, window):
         self.update_camera()
         self.draw(window)
         if self.player_in_airplane:
-            self.control(player)
+            self.control()
 
     def draw(self, window):
             window.blit(self.image, (self.rect.x, self.rect.y))
@@ -37,7 +37,7 @@ class Airplane(pygame.sprite.Sprite):
 
 
 
-    def control(self, player):
+    def control(self):
         keys = pygame.key.get_pressed()
 
         self.change_position_x_airplane= 0
@@ -47,8 +47,8 @@ class Airplane(pygame.sprite.Sprite):
             self.change_position_x_airplane -= 8
         if keys[pygame.K_d]:
             self.change_position_x_airplane += 8
-        if keys[pygame.K_UP]:
+        if keys[pygame.K_w]:
             self.rect.y -= 5
-        if keys[pygame.K_DOWN]:
+        if keys[pygame.K_s]:
             self.rect.y += 5
 

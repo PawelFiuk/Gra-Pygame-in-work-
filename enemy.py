@@ -196,8 +196,10 @@ class EnemySteamMachine(pygame.sprite.Sprite):
         if distance_to_player < 900:
             if self.rect.x < player_rect:
                 self.rect.x += 4.5
+                self.flip = False
             elif self.rect.x > player_rect:
                 self.rect.x -= 4.5
+                self.flip = True
 
     def apply_gravity(self):
         if self.falling:

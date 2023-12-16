@@ -131,7 +131,7 @@ while running_menu:
             enemy_1.update()
             mech_enemy.update(player.rect.x)
             npc_1.update(screen)
-            airplane_level_1.update(screen, player)
+            airplane_level_1.update(screen)
             ammo_package_level_1_1.update_package(screen)
             aid_kit_1.update_package(screen)
 
