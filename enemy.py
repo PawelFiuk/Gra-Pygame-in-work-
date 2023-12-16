@@ -1,4 +1,5 @@
 from settings import  *
+import math
 
 class Enemy:
     def __init__(self, x, y):
@@ -83,9 +84,6 @@ class EnemyBlueGhost(pygame.sprite.Sprite):
         if self.rect.x - position_of_player < 300:
             return True
 
-    def receive_damage(self):
-        pass
-
     def checking_is_dead_enemy(self):
         if self.current_health <= 0:
             self.is_dead = True
@@ -154,7 +152,8 @@ class EnemySteamMachine(pygame.sprite.Sprite):
             self.check_collisions()
             self.update_camera()
             self.animate()
-            if self.atack_player(position_x_player):
+            self.atack_player(position_x_player)
+            if self.atack_player_flag:
                 self.update_movement(position_x_player)
 
 
@@ -171,11 +170,11 @@ class EnemySteamMachine(pygame.sprite.Sprite):
         pygame.draw.rect(screen, (255, 0, 0), (int(self.rect.x) + 90, int(self.rect.y) - 40 , self.current_health / self.health_ratio, 30))
 
     def atack_player(self, position_of_player):
-        if self.rect.x - position_of_player < 200:
+        if self.rect.x - position_of_player < 700:
             self.atack_player_flag = True
 
-    def receive_damage(self):
-        pass
+        else:
+            self.atack_player_flag = False
 
     def checking_is_dead_enemy(self):
         if self.current_health <= 0:
@@ -192,15 +191,13 @@ class EnemySteamMachine(pygame.sprite.Sprite):
                 self.image = self.animation_frames[self.current_animation][self.current_frame]
 
     def update_movement(self, player_rect):
-        distance_to_player = abs(self.rect.x - player_rect.x)
+        distance_to_player = abs(self.rect.x - player_rect)
 
-        # If the player is within 200 units in the x-axis, move towards the player
-        if distance_to_player < 200:
-            if self.rect.x < player_rect.x:
-                self.rect.x += 5  # Adjust the speed as needed
-            elif self.rect.x > player_rect.x:
-                self.rect.x -= 5  # Adjust the speed as needed
-            # You can also update the animation here based on the direction
+        if distance_to_player < 900:
+            if self.rect.x < player_rect:
+                self.rect.x += 4.5
+            elif self.rect.x > player_rect:
+                self.rect.x -= 4.5
 
     def apply_gravity(self):
         if self.falling:
@@ -226,16 +223,12 @@ class EnemySteamMachine(pygame.sprite.Sprite):
     def update_camera(self):
         """
         Arguments: self
-        Application: updates the display of the player and the world based
-            on the player's movement.
+        Application: updates the display of the enemy and the world based
+            on the enemy movement.
         Return: None
         """
         self.rect.x += self.change_position_x_mech
         self.rect.y += self.change_position_y_mech
-
-
-
-
 
 
 
