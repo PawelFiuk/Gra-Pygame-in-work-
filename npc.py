@@ -24,7 +24,7 @@ class NPC:
         self.dialog_active = False
         self.last_dialog_time = 0
         self.current_display_text = ""
-        self.font = pygame.font.Font(None, 35)
+        self.dialog_box_image = pygame.image.load("assets/graphics/dialog_box_icon.png").convert_alpha()
 
         self.last_dialog_time = 0
 
@@ -54,18 +54,18 @@ class NPC:
 
     def draw_dialog(self, window):
 
-        rectangle_width, rectangle_height = 500, 300
-        rectangle_x, rectangle_y = (SCREEN_WIDTH - rectangle_width) // 2, (SCREEN_HEIGHT - rectangle_height) // 2
-        pygame.draw.rect(window, (0, 0, 0), pygame.Rect(rectangle_x, rectangle_y, rectangle_width, rectangle_height))
+        obraz_x, obraz_y = 500, 50
+        window.blit(self.dialog_box_image, (obraz_x, obraz_y))
+        box_dialogue_width, box_dialogue_height = self.dialog_box_image.get_size()
 
         # Podziel tekst na linie
-        lines = self.wrap_text(self.dialog_text, self.font, rectangle_width)
+        lines = self.wrap_text(self.dialog_text, font_for_dialogs, box_dialogue_width)
 
         # Renderuj każdą linię tekstu
         for i, line in enumerate(lines):
-            text_surface = self.font.render(line, True, (255, 255, 255))
+            text_surface = font_for_dialogs.render(line, True, (255, 255, 255))
             text_rect = text_surface.get_rect(
-                center=(rectangle_x + rectangle_width // 2, rectangle_y + rectangle_height // 2 + i * 20))
+                center=(obraz_x + box_dialogue_width // 2, obraz_y + box_dialogue_height // 2 + i * 20))
 
             # Wyświetl renderowany tekst
             window.blit(text_surface, text_rect)

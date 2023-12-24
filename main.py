@@ -2,7 +2,7 @@ import pygame.sprite
 
 import player
 import new_menu
-import enemy
+from enemy import EnemyBlueGhost,EnemySteamMachine
 import world
 import sound
 from pause_menu import *
@@ -26,23 +26,26 @@ bullet_groups = pygame.sprite.Group()
 enemies_group = pygame.sprite.Group()
 ammo_package_group = pygame.sprite.Group()
 aid_kit_group = pygame.sprite.Group()
+mech_group = pygame.sprite.Group()
 
 
 player = player.Player(100, SCREEN_HEIGHT - 800)
-enemy_1 = enemy.EnemyBlueGhost(2500, SCREEN_HEIGHT - 800)
+enemy_1 = EnemyBlueGhost(2500, SCREEN_HEIGHT - 800)
 npc_1 = npc.NPC(300, SCREEN_HEIGHT - 800, "assets/npc/npc_dirty.png")
 airplane_level_1 = airplane.Airplane(5300, SCREEN_HEIGHT - 1000, "assets/graphics/ship.png")
-mech_enemy = enemy.EnemySteamMachine(3700, SCREEN_HEIGHT-1000)
+mech_enemy = EnemySteamMachine(3700, SCREEN_HEIGHT-1000)
 ammo_package_level_1_1 = ammunition_package.AmmunitionPackage(2000, SCREEN_HEIGHT - 500)
 aid_kit_1 = first_aid_kit.FirstAidKit(1500, SCREEN_HEIGHT - 500)
 
 enemies_group.add(enemy_1)
-enemies_group.add(mech_enemy)
+mech_group.add(mech_enemy)
+
 aid_kit_group.add(aid_kit_1)
 ammo_package_group.add(ammo_package_level_1_1)
 all_sprites.add(player)
 all_sprites.add(enemy_1)
 all_sprites.add(mech_enemy)
+
 
 # Main line of game
 while running_menu:
@@ -75,17 +78,21 @@ while running_menu:
                         if player.rect.colliderect(npc_1.rect):
                             npc_1.dialog_box()
 
+
             # mechanics of shooting
             if is_ready_shooting:
                 if pygame.key.get_pressed()[pygame.K_c]:
-                    if current_time - last_shot_time_main_weapon > SHOOT_DELAY:
-                        sound.shotgun_sound()
-                        last_shot_time_main_weapon = current_time
-                        bullet_groups.add(player.shot_bullet())
-                        player.main_ammo_magazine -= 1
-                        if player.main_ammo_magazine < 1:
-                            out_of_main_ammo = True
-                        is_ready_shooting = False
+                    if player.main_ammo_magazine > 0:
+                        if current_time - last_shot_time_main_weapon > SHOOT_DELAY:
+                            sound.shotgun_sound()
+                            last_shot_time_main_weapon = current_time
+                            bullet_groups.add(player.shot_bullet())
+                            player.main_ammo_magazine -= 1
+                            if player.main_ammo_magazine < 1:
+                                out_of_main_ammo = True
+                            is_ready_shooting = False
+                elif player.main_ammo_magazine > 0 :
+                    out_of_main_ammo = False
             if pygame.key.get_pressed()[pygame.K_c] and out_of_main_ammo :
                 sound.empty_magazine_sound()
 
@@ -93,18 +100,43 @@ while running_menu:
                     and not out_of_main_ammo:
                 is_ready_shooting = True
 
-            collisions = pygame.sprite.groupcollide(enemies_group, bullet_groups, False, True)
-            for enemy, bullets_hit in collisions.items():
+            collisions_bluegost = pygame.sprite.groupcollide(enemies_group, bullet_groups, False, True)
+            collisions_mech = pygame.sprite.groupcollide(mech_group, bullet_groups, False, True)
+
+            for enemy, bullets_hit in collisions_bluegost.items():
                 for bullet in bullets_hit:
                     enemy.current_health -= 5
 
                     if enemy.checking_is_dead_enemy():
-                        enemies_group.remove(enemy)
-                        all_sprites.remove(enemy)
+                        player.gain_experience(enemy.exp_for_player)
+                        enemy.kill()
+
+
+            for enemy, bullets_hit in collisions_mech.items():
+                for bullet in bullets_hit:
+                    enemy.current_health -= 5
+                    enemy.received_damage_animation()
+
+                    if enemy.checking_is_dead_enemy():
+                        player.gain_experience(enemy.exp_for_player)
+                        enemy.kill()
+
+
+            for enemy in mech_group:
+                if enemy.current_animation == 'fight' and enemy.send_damage_to_player_flag:
+                    if not enemy.damage_sent_to_player:
+                        player.current_health -= 10
+                        enemy.damage_sent_to_player = True
+                else:
+                    enemy.damage_sent_to_player = False
+
 
             if player.rect.colliderect(ammo_package_level_1_1):
                 ammo_package_level_1_1.action_ammo(player)
+                ammo_package_level_1_1.kill()
                 ammo_package_group.remove(ammo_package_level_1_1)
+                out_of_main_ammo = False
+
 
             if player.rect.colliderect(aid_kit_1):
                 aid_kit_1.action_health(player)
@@ -125,14 +157,15 @@ while running_menu:
 
             # updates section
             world.draw()
-            player.update()
+
             bullet_groups.update()
             bullet_groups.draw(screen)
             enemy_1.update()
-            mech_enemy.update(player.rect.x)
+            mech_enemy.update(player.rect.x, player.current_health)
             npc_1.update(screen)
             airplane_level_1.update(screen)
             ammo_package_level_1_1.update_package(screen)
             aid_kit_1.update_package(screen)
+            player.update(world)
 
             pygame.display.flip()

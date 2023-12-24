@@ -1,43 +1,6 @@
 from settings import  *
 import math
 
-class Enemy:
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
-        self.speed = 2
-        self.distance_threshold = 200
-        self.attack_range = 30
-        self.attack_damage = 10
-        self.player_seen = False
-        self.current_health = 100
-        self.max_health = 25
-        self.health_bar_length = 300
-        self.health_ratio = self.max_health / self.health_bar_length
-
-    def update(self, player):
-        self.draw()
-        self.draw_health_bar()
-
-
-    def take_damage(self, damage):
-        self.health -= damage
-        if self.health <= 0:
-            self.health = 0
-
-    def draw(self, window):
-        """
-        Arguments: self, window - main screen for gameplay
-        Application: drawing of the enemy Blue Ghost in the screen
-        Return: None
-        """
-        self.x -= scroll_position_of_player[0]
-        self.y -= scroll_position_of_player[1]
-        window.blit(self.image, (self.x, self.y))
-
-    def draw_health_bar(self):
-        pygame.draw.rect(screen, (255, 0, 0), (self.rect.x, self.rect.y - 200, self.current_health / self.health_ratio, 30))
-
 
 class EnemyBlueGhost(pygame.sprite.Sprite):
     def __init__(self, x, y):
@@ -60,6 +23,7 @@ class EnemyBlueGhost(pygame.sprite.Sprite):
         self.health_bar_length = 200
         self.health_ratio = self.max_health / self.health_bar_length
         self.is_dead = False
+        self.exp_for_player = 10
 
 
     def update(self):
@@ -120,22 +84,30 @@ class EnemySteamMachine(pygame.sprite.Sprite):
         self.movement_sprite_sheet = pygame.image.load('assets/graphics/mech/Mech_walk.png').convert_alpha()
 
         self.fight_1_sprite_sheet = pygame.image.load('assets/graphics/mech/Mech_attack1.png').convert_alpha()
+        self.hurt_sprite_sheet = pygame.image.load('assets/graphics/mech/Mech_hurt.png').convert_alpha()
 
         self.frame_width = self.movement_sprite_sheet.get_width() // 6
         self.frame_height = self.movement_sprite_sheet.get_height()
         self.last_walk_animation_time = pygame.time.get_ticks()
+        self.last_attack_animation_time = pygame.time.get_ticks()
         self.falling = True
         self.velocity_y = 0
         self.change_position_x_mech = 0
         self.change_position_y_mech = 0
+        self.send_damage_to_player_flag = False
+        self.animation_hurt_play_count = 0
+        self.exp_for_player = 15
 
         self.animation_frames = {
             'fight': [pygame.transform.scale(
                 self.fight_1_sprite_sheet.subsurface((i * self.frame_width, 0, self.frame_width, self.frame_height)),
-                (400, 400)) for i in range(1)],
+                (400, 400)) for i in range(6)],
             'walk': [pygame.transform.scale(
                 self.movement_sprite_sheet.subsurface((i * self.frame_width, 0, self.frame_width, self.frame_height)),
                 (400, 400)) for i in range(6)],
+            'hurt': [pygame.transform.scale(
+                self.hurt_sprite_sheet.subsurface((i * self.frame_width, 0, self.frame_width, self.frame_height)),
+                (400, 400)) for i in range(2)],
         }
 
         self.current_animation = 'walk'  # Default animation
@@ -144,7 +116,7 @@ class EnemySteamMachine(pygame.sprite.Sprite):
 
 
 
-    def update(self, position_x_player):
+    def update(self, position_x_player, player_health):
         if not self.is_dead:
             self.draw()
             self.draw_health_bar()
@@ -154,7 +126,8 @@ class EnemySteamMachine(pygame.sprite.Sprite):
             self.animate()
             self.atack_player(position_x_player)
             if self.atack_player_flag:
-                self.update_movement(position_x_player)
+                self.check_is_player_visible(position_x_player)
+                self.attack_animation(player_health)
 
 
     def draw(self):
@@ -190,7 +163,7 @@ class EnemySteamMachine(pygame.sprite.Sprite):
                 self.current_frame = (self.current_frame + 1) % len(self.animation_frames[self.current_animation])
                 self.image = self.animation_frames[self.current_animation][self.current_frame]
 
-    def update_movement(self, player_rect):
+    def check_is_player_visible(self, player_rect):
         distance_to_player = abs(self.rect.x - player_rect)
 
         if distance_to_player < 900:
@@ -232,5 +205,41 @@ class EnemySteamMachine(pygame.sprite.Sprite):
         self.rect.x += self.change_position_x_mech
         self.rect.y += self.change_position_y_mech
 
+    def attack_animation(self, player_health):
+        """
+        Arguments: self
+        Application: Plays the attack animation.
+        Return: None
+        """
+        current_time = pygame.time.get_ticks()
+        attack_animation_speed = 120  # Prędkość animacji ataku
+        attack_cooldown = 2000  # Czas odnowienia ataku w milisekundach (4 sekundy)
 
+        if current_time - self.last_attack_animation_time > attack_cooldown:
+                self.last_attack_animation_time = current_time
+                self.current_animation = 'fight'
 
+        if self.current_animation == 'fight':
+            if current_time - self.last_attack_animation_time > attack_animation_speed:
+                self.last_attack_animation_time = current_time
+                self.current_frame = (self.current_frame + 1) % len(self.animation_frames[self.current_animation])
+                self.image = self.animation_frames[self.current_animation][self.current_frame]
+                # Dodaj kod obsługujący efekty ataku (np. zadawanie obrażeń graczowi)
+                self.send_damage_to_player_flag = True
+            if self.current_frame == 5 :
+                self.send_damage_to_player_flag = False
+                self.current_animation = 'walk'
+                self.current_frame = 0
+
+    def received_damage_animation(self):
+        current_time = pygame.time.get_ticks()
+        previous_animation = self.current_animation
+
+        self.current_animation = 'hurt'
+        if self.current_animation == 'hurt':
+            animation_speed = 50
+            if current_time - self.last_walk_animation_time > animation_speed:
+                self.last_walk_animation_time = current_time
+                self.current_frame = (self.current_frame + 1) % len(self.animation_frames[self.current_animation])
+                self.image = self.animation_frames[self.current_animation][self.current_frame]
+                self.current_animation = previous_animation

@@ -2,6 +2,7 @@ import pygame.sprite
 from settings import *
 from bullets import Bullets
 import time
+import physics
 
 """
     This class contains main functionality for player.    
@@ -9,7 +10,7 @@ import time
 """
 
 
-class Player(pygame.sprite.Sprite):
+class Player(pygame.sprite.Sprite, physics.Physics):
     def __init__(self, x: int, y: int):
         """
         Arguments: takes the coordinates (x: int,y: int) where the player should appear on the screen when the game starts.
@@ -28,18 +29,28 @@ class Player(pygame.sprite.Sprite):
         self.velocity_y = 0
         self.jumper = "ready"
         self.flip = False
-        self.current_health = 100
-        self.max_health = 100
-        self.health_bar_length = 300
-        self.health_ratio = self.max_health / self.health_bar_length
-        self.main_ammo_magazine = 20
-        self.max_main_ammo_magazine = 20
         self.falling = True
         self.change_position_x_player = 0
         self.change_position_y_player = 0
         self.ground_collision = False
-
+        self.experience_levels = {1: 20, 2: 50, 3: 75, 4: 100, 5:150, 6:200, 7:250}
+        self.experience_bar_color = (255, 215, 0)  # Gold color for the XP bar
+        self.health_bar_length = 300
+        self.max_health = 100
+        self.health_ratio = self.max_health / self.health_bar_length
         self.is_jumping = False
+        self.airplane_mode = False
+
+        #stats
+        self.current_health = 100
+        self.max_health = 100
+        self.level = 1
+        self.ability_points = 0
+        self.experience = 0
+        self.main_ammo_magazine = 20
+        self.max_main_ammo_magazine = 20
+
+        #animation
         self.jump_start_time = 0
         self.last_idle_animation_time = time.time()
         self.idle_animation_triggered = False
@@ -52,7 +63,6 @@ class Player(pygame.sprite.Sprite):
         self.frame_width = self.movement_sprite_sheet.get_width() // 6  # Assuming 6 frames in a row
         self.frame_height = self.movement_sprite_sheet.get_height()
         self.last_walk_animation_time = pygame.time.get_ticks()
-
         self.animation_frames = {
             'idle': [pygame.transform.scale(
                 self.idle_sprite_sheet.subsurface((i * self.frame_width, 0, self.frame_width, self.frame_height)),
@@ -69,24 +79,35 @@ class Player(pygame.sprite.Sprite):
         }
 
         self.current_animation = 'idle'  # Default animation
-        self.current_frame = 0  # Current frame index
-        #self.animation_speed = 100000  # Adjust the speed as needed
-
+        self.current_frame = 0
         self.image = self.animation_frames[self.current_animation][self.current_frame]
-        self.airplane_mode = False
 
-    def update(self):
+
+    def update(self, world):
+        """
+           Arguments: self, world - world is an instance of the World object that generates the entire game world
+           Application: method calls any other methods to be called or checked in each frame of the game,
+                it serves as a handle
+           Return: None
+        """
         self.draw()
         self.handle_movement()
         self.animate()
         self.apply_gravity()
-        self.check_collisions()
+        self.check_collisions(world)
         self.update_camera()
         self.checking_is_dead_player()
         self.health_bar()
         self.main_ammo()
+        self.draw_experience_bar(screen)
 
     def handle_movement(self):
+        """
+           Arguments: self
+           Application: the method checks whether the keys responsible for walking or other activities such as shooting
+                or interacting with the environment have been pressed
+           Return: None
+        """
         key = pygame.key.get_pressed()
 
         self.change_position_x_player = 0
@@ -134,40 +155,29 @@ class Player(pygame.sprite.Sprite):
             self.animate_idle()
 
     def apply_gravity(self):
-        if self.falling:
-            self.velocity_y += 0.2
+        """
+            Arguments: self
+            Application: the method refers to the Physics class, which is responsible
+                for implementing gravity for the player
+            Return: None
+        """
+        physics.Physics.apply_gravity(self)
 
-        if self.velocity_y == -10:
-            self.falling = True
-
-        self.change_position_y_player += self.velocity_y
-
-    def check_collisions(self):
-        from main import world
-        for tile in world.tile_list:
-            if tile[1].colliderect(self.rect.x + self.change_position_x_player,
-                                   self.rect.y + self.change_position_y_player, self.width, self.height):
-                self.change_position_x_player = 0
-
-            if tile[1].colliderect(self.rect.x, self.rect.y + self.change_position_y_player, self.width, self.height):
-                self.change_position_y_player = tile[1].top - self.rect.bottom
-                self.velocity_y = 0
-                self.jumper = 'ready'
-                self.falling = False
-                self.ground_collision = True
-                self.is_jumping = False
-                scroll_position_of_player[1] = 0
-                self.change_position_y_player = 0
-
-            # else:
-            #    self.apply_gravity()
+    def check_collisions(self, world):
+        """
+           Arguments: self
+           Application: updates the display of the player and the world based
+               on the player's movement.
+           Return: None
+        """
+        physics.Physics.check_collision(self, world)
 
     def update_camera(self):
         """
-        Arguments: self
-        Application: updates the display of the player and the world based
-            on the player's movement.
-        Return: None
+            Arguments: self
+            Application: updates the display of the player and the world based
+                on the player's movement.
+            Return: None
         """
         self.rect.x += self.change_position_x_player
         self.rect.y += self.change_position_y_player
@@ -190,10 +200,10 @@ class Player(pygame.sprite.Sprite):
 
     def draw(self):
         """
-              Arguments: self
-              Application: draws the player's character in the game window, after each frame.
-              Return: None
-              """
+        Arguments: self
+        Application: draws the player's character in the game window, after each frame.
+        Return: None
+        """
         if not self.airplane_mode:
             screen.blit(pygame.transform.flip(self.image, self.flip, False), self.rect)
 
@@ -203,7 +213,12 @@ class Player(pygame.sprite.Sprite):
         Application: draws a bar with the player's HP number in the upper left corner of the screen
         Return: None
         """
-        pygame.draw.rect(screen, (255, 0, 0), (10, 10, self.current_health / self.health_ratio, 30))
+        health_bar_width = 300  # Adjust the width of the health bar as needed
+        health_bar_height = 30
+
+        pygame.draw.rect(screen, (255, 0, 0), [10, 10, health_bar_width, health_bar_height])
+        pygame.draw.rect(screen, (0, 255, 0),
+                         [10, 10, (self.current_health / self.max_health) * health_bar_width, health_bar_height])
 
     def main_ammo(self):
         """
@@ -232,11 +247,23 @@ class Player(pygame.sprite.Sprite):
             return Bullets([pos_x + 115, pos_y + 220], True)
 
     def checking_is_dead_player(self):
+        """
+        Arguments: self
+        Application: the method checks whether the player's health has dropped below zero,
+            if so the return value is true
+        Return: boolean True
+        """
         if self.current_health <= 0:
             self.current_animation = 'dead'
             return True
 
     def animate(self):
+        """
+        Arguments: self
+        Application: the method is responsible for turning on the appropriate animation for a given
+            type of movement (like jumping, walking)
+        Return: none
+        """
         if self.is_jumping:
             elapsed_time = time.time() - self.jump_start_time
             jump_animation_speed = 8
@@ -258,7 +285,11 @@ class Player(pygame.sprite.Sprite):
                 self.image = self.animation_frames[self.current_animation][self.current_frame]
 
     def animate_idle(self):
-        # Update the current frame based on the animation speed
+        """
+        Arguments: self
+        Application: the method is responsible for turning on the appropriate animation for a idle state
+        Return: none
+        """
         current_time = pygame.time.get_ticks()
         if self.current_animation == 'idle':
             animation_speed = 85
@@ -267,10 +298,60 @@ class Player(pygame.sprite.Sprite):
                 self.current_frame = (self.current_frame + 1) % len(self.animation_frames[self.current_animation])
                 self.image = self.animation_frames[self.current_animation][self.current_frame]
 
-    def event(self):
-        pass
-
     def enter_airplane_mode(self):
+        """
+        Arguments: self
+        Application: the method is responsible for activating the aircraft movement mode
+        Return: none
+        """
         self.airplane_mode = True
 
+    def exit_airplane_mode(self):
+        """
+        Arguments: self
+        Application: the method is responsible for turning off the aircraft movement mode
+        Return: none
+        """
+        self.airplane_mode = False
+
+    def gain_experience(self, points):
+        """
+        Arguments: self
+        Application: the method adds all the experience points that the player has gained and checks whether
+            a new level has been reached. If so, the level_up() method is called
+        Return: none
+        """
+        self.experience += points
+
+        if self.level < len(self.experience_levels) and self.experience >= self.experience_levels[self.level]:
+            self.level_up()
+
+    def level_up(self):
+        """
+        Arguments: self
+        Application: the method is responsible for adding skill points when advancing to a new level
+            and transferring the remaining experience points to a new level
+        Return: none
+        """
+        temp_exp = self.experience -  self.experience_levels[self.level]
+        self.level += 1
+        self.ability_points += 2
+        self.experience = temp_exp
+
+    def draw_experience_bar(self, screen):
+        """
+         Arguments: self, screeen - screen is instance of main window of game
+         Application: the method is responsible for drawing experience bar on screen, on right sight of health bar,
+            colour of experience bar is gold.
+         Return: none
+         """
+        xp_bar_max_width = 300
+        xp_bar_width = 300
+        xp_bar_height = 30
+        xp_percentage = (self.experience / self.experience_levels[self.level]) * xp_bar_max_width
+
+        pygame.draw.rect(screen, (255, 255, 255),
+                         [350, 10, xp_bar_width, xp_bar_height])
+        pygame.draw.rect(screen, self.experience_bar_color,
+                         [350, 10, xp_percentage, xp_bar_height])
 
