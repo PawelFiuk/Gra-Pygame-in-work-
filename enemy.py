@@ -173,6 +173,8 @@ class EnemySteamMachine(pygame.sprite.Sprite):
             elif self.rect.x > player_rect:
                 self.rect.x -= 4.5
                 self.flip = True
+        else:
+            self.atack_player_flag = False
 
     def apply_gravity(self):
         if self.falling:
@@ -243,3 +245,50 @@ class EnemySteamMachine(pygame.sprite.Sprite):
                 self.current_frame = (self.current_frame + 1) % len(self.animation_frames[self.current_animation])
                 self.image = self.animation_frames[self.current_animation][self.current_frame]
                 self.current_animation = previous_animation
+
+
+class EnemyStaticMech(pygame.sprite.Sprite):
+    def __init__(self, x, y):
+        """
+        Arguments: self, position - x and y position where Enemy should be placed
+        Application: setting the basic parameters of the enemy Blue Ghost
+        Return: None
+        """
+        pygame.sprite.Sprite.__init__(self)
+        self.x = x
+        self.y = y
+        self.mech_static_img = pygame.image.load("assets/enemy/Mech_static.png").convert_alpha()
+        self.image = pygame.transform.scale(self.mech_static_img, (80, 80)).convert_alpha()
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+        self.current_health = 25
+        self.max_health = 25
+        self.health_bar_length = 150
+        self.health_ratio = self.max_health / self.health_bar_length
+        self.is_dead = False
+        self.exp_for_player = 5
+
+
+    def update(self):
+        if not self.is_dead:
+            self.draw()
+            self.draw_health_bar()
+
+    def draw(self):
+        """
+        Arguments: self, window - main screen for gameplay
+        Application: drawing of the enemy Blue Ghost in the screen
+        Return: None
+        """
+        self.rect.x -= scroll_position_of_player[0]
+        screen.blit(self.image, (self.rect.x, self.rect.y))
+
+    def draw_health_bar(self):
+        pygame.draw.rect(screen, (255, 0, 0), (int(self.rect.x) -50, int(self.rect.y) - 40 , self.current_health / self.health_ratio, 30))
+
+
+    def checking_is_dead_enemy(self):
+        if self.current_health <= 0:
+            self.is_dead = True
+            return True

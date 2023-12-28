@@ -3,6 +3,7 @@ from settings import *
 from bullets import Bullets
 import time
 import physics
+from pygame.mask import from_surface
 
 """
     This class contains main functionality for player.    
@@ -40,6 +41,14 @@ class Player(pygame.sprite.Sprite, physics.Physics):
         self.health_ratio = self.max_health / self.health_bar_length
         self.is_jumping = False
         self.airplane_mode = False
+        self.mask = from_surface(self.image)
+        self.is_magic_snus_taken = False
+        self.missing_health_bar_colour = (255, 0, 0) # Red colour for normal health bar
+        self.health_bar_colour_normal = (0, 255, 0)
+        self.health_bar_colour_snus_effect = [0, 0, 255] # Blue colour got snus health bar
+        self.actual_health_bar = self.health_bar_colour_normal
+        self.invincibility_time = 0
+        self.is_invincible = False
 
         #stats
         self.current_health = 100
@@ -98,7 +107,7 @@ class Player(pygame.sprite.Sprite, physics.Physics):
         self.update_camera()
         self.checking_is_dead_player()
         self.health_bar()
-        self.main_ammo()
+        self.show_main_ammo()
         self.draw_experience_bar(screen)
 
     def handle_movement(self):
@@ -121,14 +130,12 @@ class Player(pygame.sprite.Sprite, physics.Physics):
                 self.animate()
 
         elif key[pygame.K_d]:
-
             self.change_position_x_player += 8
-
             self.flip = False
             self.current_animation = 'walk'
             if self.change_position_x_player != 0:
                 current_time_for_animation = pygame.time.get_ticks()
-                if current_time_for_animation - self.last_walk_animation_time > 300:  # 200 milisekund (0.2 sekundy)
+                if current_time_for_animation - self.last_walk_animation_time > 300:
                     self.last_walk_animation_time = current_time_for_animation
                     self.animate()
 
@@ -150,9 +157,12 @@ class Player(pygame.sprite.Sprite, physics.Physics):
             self.current_health += 1
             self.current_health = min(self.current_health, self.max_health)
 
-        if self.change_position_x_player == 0 and not (key[pygame.K_SPACE] or key[pygame.K_w]):
-            self.current_animation = 'idle'
-            self.animate_idle()
+        if (
+            self.change_position_x_player == 0
+            and not (key[pygame.K_SPACE] or key[pygame.K_w])
+            ):
+                self.current_animation = 'idle'
+                self.animate_idle()
 
     def apply_gravity(self):
         """
@@ -166,8 +176,7 @@ class Player(pygame.sprite.Sprite, physics.Physics):
     def check_collisions(self, world):
         """
            Arguments: self
-           Application: updates the display of the player and the world based
-               on the player's movement.
+           Application: checks collisions of the player with tiles from world
            Return: None
         """
         physics.Physics.check_collision(self, world)
@@ -216,14 +225,18 @@ class Player(pygame.sprite.Sprite, physics.Physics):
         health_bar_width = 300  # Adjust the width of the health bar as needed
         health_bar_height = 30
 
-        pygame.draw.rect(screen, (255, 0, 0), [10, 10, health_bar_width, health_bar_height])
-        pygame.draw.rect(screen, (0, 255, 0),
-                         [10, 10, (self.current_health / self.max_health) * health_bar_width, health_bar_height])
+        pygame.draw.rect(screen, self.missing_health_bar_colour, [10, 10, health_bar_width, health_bar_height])
+        if not self.is_magic_snus_taken:
+            pygame.draw.rect(screen, self.health_bar_colour_normal,
+                             [10, 10, (self.current_health / self.max_health) * health_bar_width, health_bar_height])
+        if self.is_magic_snus_taken:
+            pygame.draw.rect(screen, self.health_bar_colour_snus_effect,
+                             [10, 10, (self.current_health / self.max_health) * health_bar_width, health_bar_height])
 
-    def main_ammo(self):
+    def show_main_ammo(self):
         """
         Arguments: self
-        Application: draws a bar with the player's HP number in the upper left corner of the screen
+        Application: draws a players number of main ammo in the upper left corner of the screen
         Return: None
         """
         text = font.render(str(self.main_ammo_magazine), True, (0, 0, 0))
@@ -292,7 +305,7 @@ class Player(pygame.sprite.Sprite, physics.Physics):
         """
         current_time = pygame.time.get_ticks()
         if self.current_animation == 'idle':
-            animation_speed = 85
+            animation_speed = 800
             if current_time - self.last_walk_animation_time > animation_speed:
                 self.last_walk_animation_time = current_time
                 self.current_frame = (self.current_frame + 1) % len(self.animation_frames[self.current_animation])
@@ -306,13 +319,17 @@ class Player(pygame.sprite.Sprite, physics.Physics):
         """
         self.airplane_mode = True
 
-    def exit_airplane_mode(self):
+    def exit_airplane_mode(self, position_x, position_y):
         """
-        Arguments: self
-        Application: the method is responsible for turning off the aircraft movement mode
+        Arguments: self, position_x, position_y - positions are equall to positions of rectangle of airplane,
+        Application: the method is responsible for turning off the aircraft movement mode, with positions of airplane
+            player can be respawned in place where airplane stops after exiting, self.airplane_mode is setting to False
+            and player can be rendered again.
         Return: none
         """
         self.airplane_mode = False
+        self.rect.x = position_x
+        self.rect.y = position_y
 
     def gain_experience(self, points):
         """
@@ -354,4 +371,11 @@ class Player(pygame.sprite.Sprite, physics.Physics):
                          [350, 10, xp_bar_width, xp_bar_height])
         pygame.draw.rect(screen, self.experience_bar_color,
                          [350, 10, xp_percentage, xp_bar_height])
+
+    def snus_special_effect(self):
+        if self.is_magic_snus_taken:
+            self.actual_health_bar = self.health_bar_colour_snus_effect
+            self.current_health = self.max_health
+            self.main_ammo_magazine = self.max_main_ammo_magazine
+
 

@@ -17,7 +17,7 @@ def pause_menu_screen():
                 pygame.quit()
 
             if pygame.key.get_pressed()[pygame.K_ESCAPE]:
-                if current_time - settings.last_esc_time >= 0.5:  # Sprawdź, czy minęła co najmniej 1 sekunda od ostatniego esc
+                if current_time - settings.last_esc_time >= 0.5:
                     settings.last_esc_time = current_time
                     paused = False
                     return paused

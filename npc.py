@@ -20,7 +20,7 @@ class NPC:
         self.y = y
         self.dialog_text = ("Augustus, pozwól że pomogę ci się stąd wydostać! "
                             "Kierujesz WSAD, strzelasz C, interakcja z obiektami E, "
-                            "ESC to pauza")  # Twój tekst dialogu
+                            "ESC to pauza")
         self.dialog_active = False
         self.last_dialog_time = 0
         self.current_display_text = ""
@@ -48,6 +48,7 @@ class NPC:
         window.blit(self.image, (self.x, self.y))
         if self.dialog_active:
             self.draw_dialog(window)
+
     def update_camera(self):
         self.rect.x -= scroll_position_of_player[0]
         self.x -= scroll_position_of_player[0]
@@ -57,17 +58,12 @@ class NPC:
         obraz_x, obraz_y = 500, 50
         window.blit(self.dialog_box_image, (obraz_x, obraz_y))
         box_dialogue_width, box_dialogue_height = self.dialog_box_image.get_size()
-
-        # Podziel tekst na linie
         lines = self.wrap_text(self.dialog_text, font_for_dialogs, box_dialogue_width)
 
-        # Renderuj każdą linię tekstu
         for i, line in enumerate(lines):
             text_surface = font_for_dialogs.render(line, True, (255, 255, 255))
             text_rect = text_surface.get_rect(
                 center=(obraz_x + box_dialogue_width // 2, obraz_y + box_dialogue_height // 2 + i * 20))
-
-            # Wyświetl renderowany tekst
             window.blit(text_surface, text_rect)
 
     def wrap_text(self, text, font, max_width):
@@ -87,3 +83,11 @@ class NPC:
 
         lines.append(current_line)
         return lines
+
+
+class NPC2(NPC):
+    def __init__(self, x, y, image_source):
+        super().__init__(x, y, image_source)
+        self.dialog_text = ("To jest statek powietrzny którym sie stad wydostasz! "
+                            "Kierujesz WSAD, strzelasz C, interakcja z obiektami E, "
+                            "zestrzel wszystkie beczki!")

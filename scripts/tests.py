@@ -42,7 +42,7 @@ class TestPlayer(unittest.TestCase):
         # You can create a mock screen surface to test the main ammo rendering.
         # Example: Test if the main ammo count gets rendered correctly
         mock_screen = pygame.Surface((800, 600))  # Create a mock screen surface
-        self.player.main_ammo()
+        self.player.show_main_ammo()
         # Add assertions to check if the main ammo count was rendered correctly on the mock screen
 
     def test_position(self):

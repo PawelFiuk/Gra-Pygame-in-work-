@@ -1,5 +1,7 @@
 import pygame.sprite
 from settings import *
+import physics
+from bullets import AirplaneBulelts
 
 class Airplane(pygame.sprite.Sprite):
     def __init__(self, x, y, image_source):
@@ -21,11 +23,13 @@ class Airplane(pygame.sprite.Sprite):
 
 
 
-    def update(self, window):
+
+    def update(self, window, world):
         self.update_camera()
         self.draw(window)
         if self.player_in_airplane:
             self.control()
+            self.check_collisions(world)
 
     def draw(self, window):
             window.blit(self.image, (self.rect.x, self.rect.y))
@@ -52,3 +56,22 @@ class Airplane(pygame.sprite.Sprite):
         if keys[pygame.K_s]:
             self.rect.y += 5
 
+    def check_collisions(self, world):
+        """
+           Arguments: self
+           Application: updates the display of the airplane and the world based
+               on the player's movement.
+           Return: None
+        """
+        physics.Physics.check_collision_airplane(self, world)
+
+    def shot_bullet(self):
+        """
+        Arguments: self
+        Application: This method is used to create a new class of projectile that will be fired after
+            a specific game event. Supports shooting from two sides, when the player is turned and when he is not.
+        Return: Bullets class
+        """
+        pos_x = self.rect.x + self.width // 2
+        pos_y = self.rect.y + self.height + 250
+        return AirplaneBulelts([pos_x , pos_y ])
