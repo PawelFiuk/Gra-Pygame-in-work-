@@ -1,9 +1,6 @@
-import settings
-import pygame
-
 import unittest
 import pygame
-from player import Player  # Replace 'your_module' with the actual module name where Player is defined
+from player import Player
 
 class TestPlayer(unittest.TestCase):
 
@@ -24,17 +21,17 @@ class TestPlayer(unittest.TestCase):
     def test_update(self):
         # You can simulate key presses or other actions to test the update method.
         # Example: Simulate a jump action
-        self.player.update()  # Simulate an update without any key presses
+        self.player.update()
         initial_y = self.player.rect.y
         self.player.velocity_y = -10
         self.player.jumper = "ready"
-        self.player.update()  # Simulate an update after a jump action
-        self.assertNotEqual(self.player.rect.y, initial_y)  # Check if the player's position changed after a jump
+        self.player.update()
+        self.assertNotEqual(self.player.rect.y, initial_y)
 
     def test_health_bar(self):
         # You can create a mock screen surface to test the health bar rendering.
         # Example: Test if the health bar gets drawn correctly
-        mock_screen = pygame.Surface((800, 600))  # Create a mock screen surface
+        mock_screen = pygame.Surface((800, 600))
         self.player.health_bar()
         # Add assertions to check if the health bar was drawn correctly on the mock screen
 
@@ -50,7 +47,7 @@ class TestPlayer(unittest.TestCase):
         self.assertEqual(len(position), 2)
         self.assertEqual(len(position[0]), 1)
         self.assertEqual(len(position[1]), 1)
-        # Add assertions to check the correctness of the player's position
+
 
     def test_shot_bullet(self):
         # Example: Test if the shot_bullet method returns a Bullets object with correct coordinates

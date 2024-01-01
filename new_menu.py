@@ -18,7 +18,7 @@ class Menu:
     def draw(self):
         self.running_menu = True
         button_start = button.Button(0, 500, start_button_img, 0.8)
-        button_quit = button.Button(60, 700, exit_button_img, 0.025)
+        button_quit = button.Button(60, 900, exit_button_img, 0.025)
 
         while self.running_menu:
             screen_menu.blit(self.bg_menu, (0, 0))

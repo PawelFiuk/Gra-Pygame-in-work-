@@ -31,6 +31,7 @@ class Airplane(pygame.sprite.Sprite):
             self.control()
             self.check_collisions(world)
 
+
     def draw(self, window):
             window.blit(self.image, (self.rect.x, self.rect.y))
 

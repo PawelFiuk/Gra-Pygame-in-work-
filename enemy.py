@@ -251,7 +251,7 @@ class EnemyStaticMech(pygame.sprite.Sprite):
     def __init__(self, x, y):
         """
         Arguments: self, position - x and y position where Enemy should be placed
-        Application: setting the basic parameters of the enemy Blue Ghost
+        Application: setting the basic parameters of the enemy Static Mech
         Return: None
         """
         pygame.sprite.Sprite.__init__(self)
@@ -268,6 +268,7 @@ class EnemyStaticMech(pygame.sprite.Sprite):
         self.health_ratio = self.max_health / self.health_bar_length
         self.is_dead = False
         self.exp_for_player = 5
+        self.mask = pygame.mask.from_surface(self.image)
 
 
     def update(self):
@@ -284,8 +285,9 @@ class EnemyStaticMech(pygame.sprite.Sprite):
         self.rect.x -= scroll_position_of_player[0]
         screen.blit(self.image, (self.rect.x, self.rect.y))
 
+
     def draw_health_bar(self):
-        pygame.draw.rect(screen, (255, 0, 0), (int(self.rect.x) -50, int(self.rect.y) - 40 , self.current_health / self.health_ratio, 30))
+        pygame.draw.rect(screen, (255, 0, 0), (int(self.rect.x) -20, int(self.rect.y) - 40 , self.current_health / self.health_ratio, 30))
 
 
     def checking_is_dead_enemy(self):

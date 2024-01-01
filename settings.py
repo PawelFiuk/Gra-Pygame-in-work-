@@ -41,16 +41,20 @@ pygame.mixer.set_num_channels(2)
 # Shooting
 
 SHOOT_DELAY = 0.1
+THROW_DELAY = 1.5
 shooting = False
 is_ready_shooting = True
 last_shot_time_main_weapon = 0
 out_of_main_ammo = False
+last_time_throw_grenade = 0
+is_ready_throwing = True
 
 # Shooting for airplane
 SHOOT_DELAY_AIRPLANE = 2
 is_ready_shooting_airplane = True
 last_shot_time_airplane = 0
 time_entered_airplane = 0.0
+
 
 # Global variables for game
 key = pygame.key.get_pressed()
@@ -64,11 +68,13 @@ dialogue_switch = False
 #current_time = time.time()
 last_esc_time = 0
 is_player_in_airplane = False
+last_skill_tree_time = 0
 
 # Global variables for player
 flipped_player_global = False
 is_dead_player = False
 snus_taken_time = 0
+START_GAME = False
 
 # World map level 1
 

@@ -23,11 +23,17 @@ class AmmunitionPackage(pygame.sprite.Sprite):
 
     def action_ammo(self, player):
         if not self.is_take and not player.main_ammo_magazine == 20:
-            remaining_ammo = 20 - player.main_ammo_magazine
+            remaining_ammo = player.max_main_ammo_magazine - player.main_ammo_magazine
             if remaining_ammo < 5:
                 player.main_ammo_magazine = 20
             else:
                 player.main_ammo_magazine += 5
+
+            remaining_grenades = player.max_grenade_amount - player.current_amount_grenades
+            if remaining_grenades < 3:
+                player.current_amount_grenades = 5
+            else:
+                player.current_amount_grenades += 2
             self.is_take = True
             self.kill()
 

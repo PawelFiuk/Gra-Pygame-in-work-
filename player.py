@@ -1,6 +1,6 @@
 import pygame.sprite
 from settings import *
-from bullets import Bullets
+from bullets import Bullets, Grenade
 import time
 import physics
 from pygame.mask import from_surface
@@ -33,6 +33,7 @@ class Player(pygame.sprite.Sprite, physics.Physics):
         self.falling = True
         self.change_position_x_player = 0
         self.change_position_y_player = 0
+        self.mask = pygame.mask.from_surface(self.image)
         self.ground_collision = False
         self.experience_levels = {1: 20, 2: 50, 3: 75, 4: 100, 5:150, 6:200, 7:250}
         self.experience_bar_color = (255, 215, 0)  # Gold color for the XP bar
@@ -50,6 +51,8 @@ class Player(pygame.sprite.Sprite, physics.Physics):
         self.invincibility_time = 0
         self.is_invincible = False
 
+
+
         #stats
         self.current_health = 100
         self.max_health = 100
@@ -58,6 +61,8 @@ class Player(pygame.sprite.Sprite, physics.Physics):
         self.experience = 0
         self.main_ammo_magazine = 20
         self.max_main_ammo_magazine = 20
+        self.max_grenade_amount = 5
+        self.current_amount_grenades = 5
 
         #animation
         self.jump_start_time = 0
@@ -109,6 +114,7 @@ class Player(pygame.sprite.Sprite, physics.Physics):
         self.health_bar()
         self.show_main_ammo()
         self.draw_experience_bar(screen)
+        self.update_mask()
 
     def handle_movement(self):
         """
@@ -214,7 +220,12 @@ class Player(pygame.sprite.Sprite, physics.Physics):
         Return: None
         """
         if not self.airplane_mode:
+            empty_surface = pygame.Surface((400, 400), pygame.SRCALPHA)
+            screen.blit(empty_surface, self.rect.topleft)
             screen.blit(pygame.transform.flip(self.image, self.flip, False), self.rect)
+
+    def update_mask(self):
+        self.mask = pygame.mask.from_surface(self.image)
 
     def health_bar(self):
         """
@@ -241,6 +252,8 @@ class Player(pygame.sprite.Sprite, physics.Physics):
         """
         text = font.render(str(self.main_ammo_magazine), True, (0, 0, 0))
         screen.blit(text, (50, 50))
+        text_number_of_grenades = font.render(str(self.current_amount_grenades), True, (0, 0, 0))
+        screen.blit(text_number_of_grenades, (50, 110))
 
     def shot_bullet(self):
         """
@@ -377,5 +390,11 @@ class Player(pygame.sprite.Sprite, physics.Physics):
             self.actual_health_bar = self.health_bar_colour_snus_effect
             self.current_health = self.max_health
             self.main_ammo_magazine = self.max_main_ammo_magazine
+            self.current_amount_grenades = self.max_grenade_amount
 
+    def throw_grenade(self):
+        if not self.flip:
+            pos_x = self.rect.x
+            pos_y = self.rect.y
+            return Grenade([pos_x + 460, pos_y + 220], False)
 
