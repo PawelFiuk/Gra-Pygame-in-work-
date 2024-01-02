@@ -1,4 +1,3 @@
-import bullets
 import player
 import new_menu
 from enemy import EnemyBlueGhost,EnemySteamMachine, EnemyStaticMech
@@ -13,6 +12,7 @@ import ammunition_package
 import first_aid_kit
 import skill_tree
 import magic_snus
+import events
 
 # Initialisation of game
 
@@ -79,11 +79,11 @@ while running_game:
     current_time = time.time()
 
     for event in pygame.event.get():
+        keys = pygame.key.get_pressed()
 
-        if pygame.key.get_pressed()[pygame.K_ESCAPE]:
-            if current_time - last_esc_time >= 0.5:
-                last_esc_time = current_time
-                pause_menu_screen()
+        if keys[pygame.K_ESCAPE] and current_time - last_esc_time >= 0.5:
+            last_esc_time = current_time
+            pause_menu_screen()
 
         elif event.type == pygame.QUIT:
             pygame.quit()
@@ -95,18 +95,14 @@ while running_game:
                     airplane_level_1.player_in_airplane = True
                     player.enter_airplane_mode()
 
-                if player.rect.colliderect(npc_1.rect):
-                    npc_1.dialog_box()
+                if player.rect.colliderect(npc_1.rect) or player.rect.colliderect(npc_2.rect):
+                    npc_1.dialog_box() if player.rect.colliderect(npc_1.rect) else npc_2.dialog_box()
 
-                if player.rect.colliderect(npc_2.rect):
-                    npc_2.dialog_box()
+        elif airplane_level_1.player_in_airplane and keys[pygame.K_e] and current_time - time_entered_airplane >= 2.0:
+            airplane_level_1.player_in_airplane = False
+            player.exit_airplane_mode(airplane_level_1.rect.x, airplane_level_1.rect.y)
 
-        elif airplane_level_1.player_in_airplane and pygame.key.get_pressed()[pygame.K_e]:
-            if current_time - time_entered_airplane >= 2.0:
-                airplane_level_1.player_in_airplane = False
-                player.exit_airplane_mode(airplane_level_1.rect.x, airplane_level_1.rect.y)
-
-        elif pygame.key.get_pressed()[pygame.K_r]:
+        elif keys[pygame.K_r]:
             skill_tree_for_player.update()
 
     # mechanics of shooting
@@ -158,60 +154,11 @@ while running_game:
             and not out_of_main_ammo:
         is_ready_shooting = True
 
-
-    for bullet in bullet_groups:
-        for blue_ghost in blue_ghost_group:
-            if pygame.sprite.collide_mask(bullet, blue_ghost):
-                blue_ghost.current_health -= bullet.damage_of_bullet
-                bullet.kill()
-                if blue_ghost.checking_is_dead_enemy():
-                    player.gain_experience(blue_ghost.exp_for_player)
-                    blue_ghost.kill()
-
-    for bullet in bullet_groups:
-        for mech in mech_group:
-            if pygame.sprite.collide_mask(bullet, mech):
-                mech.current_health -= bullet.damage_of_bullet
-                enemy.received_damage_animation()
-                bullet.kill()
-                if mech.checking_is_dead_enemy():
-                    player.gain_experience(mech.exp_for_player)
-                    mech.kill()
-
-    for bomb in airplane_bullets_group:
-        for static_mech in static_mech_group:
-            if pygame.sprite.collide_mask(bomb, static_mech):
-                static_mech.current_health -= bomb.damage
-                bomb.kill()
-
-                explosion_effect = bullets.Explosion(static_mech.rect.x - 90, static_mech.rect.y - 150)
-                explosions_group.add(explosion_effect)
-
-                if static_mech.checking_is_dead_enemy():
-                    player.gain_experience(static_mech.exp_for_player)
-                    static_mech.kill()
-
-    for enemy in mech_group:
-        if enemy.current_animation == 'fight' and enemy.send_damage_to_player_flag:
-            if not enemy.damage_sent_to_player:
-                if not player.is_magic_snus_taken:
-                    player.current_health -= 10
-                    enemy.damage_sent_to_player = True
-        else:
-            enemy.damage_sent_to_player = False
-
-    for grenade in grenades_group:
-        for enemy in all_enemies_group:
-            if pygame.sprite.collide_mask(grenade, enemy):
-                enemy.current_health -= grenade.damage
-                grenade.kill()
-
-                explosion_effect = bullets.Explosion(enemy.rect.x - 90, enemy.rect.y - 150)
-                explosions_group.add(explosion_effect)
-
-                if enemy.checking_is_dead_enemy():
-                    player.gain_experience(enemy.exp_for_player)
-                    enemy.kill()
+    events.handle_blue_ghost_collision_with_bullet(bullet_groups, blue_ghost_group, player)
+    events.handle_mech_collision_with_bullet(bullet_groups, mech_group, player)
+    events.handle_airplane_bombs_collision(airplane_bullets_group, static_mech_group, player, explosions_group)
+    events.handle_mech_damage(mech_group, player)
+    events.handle_grenade_collision(grenades_group, all_enemies_group, player, explosions_group)
 
     if player.rect.colliderect(ammo_package_level_1_1):
         ammo_package_level_1_1.action_ammo(player)
