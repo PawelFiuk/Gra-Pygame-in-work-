@@ -1,8 +1,8 @@
 from settings import  *
 
-class MagicSnus():
+class MagicSnus(pygame.sprite.Sprite):
     def __init__(self, x, y):
-        #pygame.sprite.Sprite.__init__(self)
+        pygame.sprite.Sprite.__init__(self)
         item_image = pygame.image.load('assets/graphics/magic_snus.png').convert_alpha()
         self.image = pygame.transform.scale(item_image, (100, 80)).convert_alpha()
         self.rect = self.image.get_rect()

@@ -51,8 +51,6 @@ class Player(pygame.sprite.Sprite, physics.Physics):
         self.invincibility_time = 0
         self.is_invincible = False
 
-
-
         #stats
         self.current_health = 100
         self.max_health = 100
@@ -234,7 +232,7 @@ class Player(pygame.sprite.Sprite, physics.Physics):
         Application: draws a bar with the player's HP number in the upper left corner of the screen
         Return: None
         """
-        health_bar_width = 300  # Adjust the width of the health bar as needed
+        health_bar_width = 300
         health_bar_height = 30
 
         pygame.draw.rect(screen, self.missing_health_bar_colour, [10, 10, health_bar_width, health_bar_height])

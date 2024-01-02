@@ -15,6 +15,7 @@ import magic_snus
 import events
 import UI
 
+
 # Initialisation of game
 
 pygame.init()
