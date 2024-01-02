@@ -13,6 +13,8 @@ import first_aid_kit
 import skill_tree
 import magic_snus
 import events
+import UI
+
 
 # Initialisation of game
 
@@ -205,6 +207,7 @@ while running_game:
     airplane_bullets_group.draw(screen)
     enemy_1.update()
     mech_enemy.update(player.rect.x, player.current_health)
+
     npc_1.update(screen)
     npc_2.update(screen)
     airplane_level_1.update(screen, world)
@@ -213,5 +216,6 @@ while running_game:
     static_mech_group.draw(screen)
     static_mech_group.update()
     player.update(world)
-
+    UI.grenades_icon()
+    UI.ammo_icon()
     pygame.display.flip()
