@@ -62,6 +62,7 @@ play_menu_theme_music = True
 pygame.font.init()
 font = pygame.font.SysFont(None, 64)
 font_for_dialogs = pygame.font.SysFont("monospace", 25)
+font_for_ability_message = pygame.font.SysFont(None, 18)
 TILE_SIZE = 100
 dialogue_font = pygame.font.SysFont(None, 16)
 dialogue_switch = False

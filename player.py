@@ -115,6 +115,7 @@ class Player(pygame.sprite.Sprite, physics.Physics):
         self.show_main_ammo()
         self.draw_experience_bar(screen)
         self.update_mask()
+        self.message_about_avalaible_ability_points()
 
     def handle_movement(self):
         """
@@ -368,6 +369,13 @@ class Player(pygame.sprite.Sprite, physics.Physics):
         self.ability_points += 2
         self.experience = temp_exp
 
+    def message_about_avalaible_ability_points(self):
+        if self.ability_points > 0:
+            message_about_abilit_points =f"Awansowałeś! Masz {self.ability_points} punktów umiejętności, wciśnij r, żeby otworzyć drzewko umiejętności!"
+            text_level = font_for_ability_message.render(message_about_abilit_points, True, (255, 255, 255))
+            screen.blit(text_level, (1050, 10))
+
+
     def draw_experience_bar(self, screen):
         """
          Arguments: self, screeen - screen is instance of main window of game
@@ -384,6 +392,9 @@ class Player(pygame.sprite.Sprite, physics.Physics):
                          [350, 10, xp_bar_width, xp_bar_height])
         pygame.draw.rect(screen, self.experience_bar_color,
                          [350, 10, xp_percentage, xp_bar_height])
+        level = "   Level "
+        text_level = font.render(str(self.level) + level, True, (255, 255, 255))
+        screen.blit(text_level, (750, 10))
 
     def snus_special_effect(self):
         if self.is_magic_snus_taken:
@@ -398,3 +409,7 @@ class Player(pygame.sprite.Sprite, physics.Physics):
             pos_y = self.rect.y
             return Grenade([pos_x + 460, pos_y + 220], False)
 
+        if self.flip:
+            pos_x = self.rect.x
+            pos_y = self.rect.y
+            return Grenade([pos_x +460, pos_y + 220], True)
