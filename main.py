@@ -1,6 +1,6 @@
 import player
 import new_menu
-from enemy import EnemyBlueGhost,EnemySteamMachine, EnemyStaticMech
+from enemy import EnemyBlueGhost,EnemySteamMachine, EnemyStaticMech, EnemyBossFirstLevel
 import world
 import sound
 from pause_menu import *
@@ -36,7 +36,7 @@ explosions_group = pygame.sprite.Group()
 grenades_group = pygame.sprite.Group()
 blue_ghost_group = pygame.sprite.Group()
 all_enemies_group = pygame.sprite.Group()
-
+boss_group = pygame.sprite.Group()
 
 # Making objects of game
 world = world.World(world_data)
@@ -54,6 +54,7 @@ static_mech_1 = EnemyStaticMech(7000, 930)
 static_mech_2 = EnemyStaticMech(7600, 930)
 static_mech_3 = EnemyStaticMech(8400, 930)
 static_mech_4 = EnemyStaticMech(9500, 930)
+boss = EnemyBossFirstLevel(10000, SCREEN_HEIGHT - 800)
 
 
 # Adding objects to groups
@@ -63,8 +64,9 @@ static_mech_group.add(static_mech_1, static_mech_2, static_mech_3, static_mech_4
 aid_kit_group.add(aid_kit_1)
 ammo_package_group.add(ammo_package_level_1_1)
 blue_ghost_group.add(enemy_1)
+boss_group.add(boss)
 
-all_enemies_group.add(mech_group, blue_ghost_group)
+all_enemies_group.add(mech_group, blue_ghost_group, boss_group)
 
 # Main line of game
 while running_menu:
@@ -161,6 +163,9 @@ while running_game:
     events.handle_airplane_bombs_collision(airplane_bullets_group, static_mech_group, player, explosions_group)
     events.handle_mech_damage(mech_group, player)
     events.handle_grenade_collision(grenades_group, all_enemies_group, player, explosions_group)
+    events.handle_boss_damage(boss_group, player)
+    events.handle_boss_collision_with_bullet(bullet_groups, boss_group, player)
+
 
     if player.rect.colliderect(ammo_package_level_1_1):
         ammo_package_level_1_1.action_ammo(player)
@@ -196,8 +201,6 @@ while running_game:
     # updates section
     world.draw()
 
-    explosions_group.draw(screen)
-    explosions_group.update()
     snus_1_1.update_package(screen)
     bullet_groups.update()
     bullet_groups.draw(screen)
@@ -207,6 +210,9 @@ while running_game:
     airplane_bullets_group.draw(screen)
     enemy_1.update()
     mech_enemy.update(player.rect.x, player.current_health)
+    boss_group.update(player.rect.x, player.current_health)
+    explosions_group.draw(screen)
+    explosions_group.update()
 
     npc_1.update(screen)
     npc_2.update(screen)
