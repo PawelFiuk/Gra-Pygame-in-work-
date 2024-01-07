@@ -83,6 +83,12 @@ class AirplaneBulelts(pygame.sprite.Sprite):
 
 class Explosion(pygame.sprite.Sprite):
     def __init__(self, x, y, animation_speed=35):
+        """
+        Arguments: self, position - x and y position from which the explosion animation will be started, animation_speed -
+            the speed at which animation frames will change
+        Application: setting the basic parameters of the explosion animation
+        Return: None
+        """
         pygame.sprite.Sprite.__init__(self)
         self.explosion_images = [pygame.image.load(os.path.join('assets/graphics/special_effects/Circle_explosion', f'Circle_explosion{i}.png')).convert_alpha()
                                  for i in range(1, 11)]
@@ -95,10 +101,21 @@ class Explosion(pygame.sprite.Sprite):
         self.last_update = pygame.time.get_ticks()
 
     def update(self):
+        """
+           Arguments: self
+           Application: method calls any other methods to be called or checked in each frame of the game,
+                it serves as a handle
+           Return: None
+        """
         self.animate()
         self.draw()
 
     def animate(self):
+        """
+           Arguments: self
+           Application: method supports animations, changes frames after time, etc.
+           Return: None
+        """
         now = pygame.time.get_ticks()
         if now - self.last_update > self.animation_speed:
             self.last_update = now
@@ -111,6 +128,11 @@ class Explosion(pygame.sprite.Sprite):
                 self.rect = self.image.get_rect()
                 self.rect.center = center
     def draw(self):
+        """
+           Arguments: self
+           Application: method draws animation of explosion on screen
+           Return: None
+        """
         self.rect.x -= scroll_position_of_player[0]
         screen.blit(self.image, self.rect)
 

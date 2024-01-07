@@ -209,8 +209,8 @@ while running_game:
     airplane_bullets_group.update()
     airplane_bullets_group.draw(screen)
     enemy_1.update()
-    mech_enemy.update(player.rect.x, player.current_health)
-    boss_group.update(player.rect.x, player.current_health)
+    mech_enemy.update(player.rect.x, world)
+    boss_group.update(player.rect.x, world)
     explosions_group.draw(screen)
     explosions_group.update()
 

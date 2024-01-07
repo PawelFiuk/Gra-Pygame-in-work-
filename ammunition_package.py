@@ -1,7 +1,12 @@
 from settings import  *
 
 class AmmunitionPackage(pygame.sprite.Sprite):
-    def __init__(self, x, y):
+    def __init__(self, x: int, y: int):
+        """
+        Arguments: takes the coordinates (x: int,y: int) where the package should appear on the screen when the game starts.
+        Application: setting default parameters for package, loading images etc.
+        Return: None
+        """
         pygame.sprite.Sprite.__init__(self)
         item_image = pygame.image.load('assets/graphics/ammo_package.jpg').convert_alpha()
         self.image = pygame.transform.scale(item_image, (100, 80)).convert_alpha()
@@ -15,14 +20,31 @@ class AmmunitionPackage(pygame.sprite.Sprite):
         self.is_take = False
 
     def update_package(self, window):
+        """
+           Arguments: self, window - main scene for game
+           Application: method calls any other methods to be called or checked in each frame of the game,
+                it serves as a handle
+           Return: None
+        """
         if not self.is_take:
             self.draw_item(window)
             self.update_camera()
     def draw_item(self, window):
+        """
+           Arguments: self, window - main scene for game
+           Application: draws package on screen
+           Return: None
+        """
         window.blit(self.image, (self.x, self.y))
 
     def action_ammo(self, player):
-        if not self.is_take and not player.main_ammo_magazine == player.max_main_ammo_magazine:
+        """
+           Arguments: self, player - object of player in the game
+           Application: method checks amount of ammunition and grenades of player, if there is maximum amount of them
+                player can't pick up a package, if something is missing, package will add an ammunition
+           Return: None
+        """
+        if not self.is_take and not player.main_ammo_magazine == player.max_main_ammo_magazine and not player.current_amount_grenades == player.max_grenade_amount:
             remaining_ammo = player.max_main_ammo_magazine - player.main_ammo_magazine
             if remaining_ammo < 5:
                 player.main_ammo_magazine = player.max_main_ammo_magazine
@@ -39,5 +61,11 @@ class AmmunitionPackage(pygame.sprite.Sprite):
 
 
     def update_camera(self):
+        """
+            Arguments: self
+            Application: updates the display of the package and the world based
+                on the player's movement.
+            Return: None
+        """
         self.rect.x -= scroll_position_of_player[0]
         self.x -= scroll_position_of_player[0]
