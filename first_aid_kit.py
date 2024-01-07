@@ -22,10 +22,10 @@ class FirstAidKit(pygame.sprite.Sprite):
         window.blit(self.image, (self.x, self.y))
 
     def action_health(self, player):
-        if not self.is_take and not player.current_health == 100:
-            remaining_health = 100 - player.current_health
+        if not self.is_take and not player.current_health == player.max_health:
+            remaining_health = player.max_health - player.current_health
             if remaining_health < 25:
-                player.current_health = 100
+                player.current_health = player.max_health
             else:
                 player.current_health += 25
             self.is_take = True

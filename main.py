@@ -54,7 +54,7 @@ static_mech_1 = EnemyStaticMech(7000, 930)
 static_mech_2 = EnemyStaticMech(7600, 930)
 static_mech_3 = EnemyStaticMech(8400, 930)
 static_mech_4 = EnemyStaticMech(9500, 930)
-boss = EnemyBossFirstLevel(10000, SCREEN_HEIGHT - 800)
+boss = EnemyBossFirstLevel(11500, SCREEN_HEIGHT - 800)
 
 
 # Adding objects to groups
@@ -107,7 +107,7 @@ while running_game:
             player.exit_airplane_mode(airplane_level_1.rect.x, airplane_level_1.rect.y)
 
         elif keys[pygame.K_r]:
-            skill_tree_for_player.update()
+            skill_tree_for_player.update(player)
 
     # mechanics of shooting
     if is_ready_shooting:
