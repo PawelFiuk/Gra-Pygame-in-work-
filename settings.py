@@ -30,6 +30,7 @@ BLACK = (0, 0, 0)
 
 start_button_img = pygame.image.load("assets/graphics/start_button_menu.png")
 exit_button_img = pygame.image.load("assets/graphics/quit_button_menu.png")
+add_ability_button_img = pygame.image.load("assets/graphics/plus_button.png")
 npc_1_image = pygame.image.load("assets/npc/npc_dirty.png")
 airplane_image_asset = pygame.image.load("assets/graphics/ship.png")
 
@@ -63,6 +64,7 @@ pygame.font.init()
 font = pygame.font.SysFont(None, 64)
 font_for_dialogs = pygame.font.SysFont("monospace", 25)
 font_for_ability_message = pygame.font.SysFont(None, 18)
+font_skill_tree = pygame.font.SysFont(None, 64)
 TILE_SIZE = 100
 dialogue_font = pygame.font.SysFont(None, 16)
 dialogue_switch = False

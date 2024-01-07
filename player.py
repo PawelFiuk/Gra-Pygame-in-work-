@@ -154,14 +154,6 @@ class Player(pygame.sprite.Sprite, physics.Physics):
             self.current_animation = 'jump'
             self.animate()
 
-        if key[pygame.K_j]:
-            self.current_health -= 1
-            self.current_health = max(self.current_health, 0)
-
-        if key[pygame.K_k]:
-            self.current_health += 1
-            self.current_health = min(self.current_health, self.max_health)
-
         if (
             self.change_position_x_player == 0
             and not (key[pygame.K_SPACE] or key[pygame.K_w])

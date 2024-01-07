@@ -263,8 +263,8 @@ class EnemyBossFirstLevel(pygame.sprite.Sprite):
         self.width = self.image.get_width()
         self.height = self.image.get_height()
         self.current_health = 50
-        self.max_health = 50
-        self.health_bar_length = 600
+        self.max_health = 200
+        self.health_bar_length = 1200
         self.health_ratio = self.max_health / self.health_bar_length
         self.is_dead = False
         self.atack_player_flag = False
