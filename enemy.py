@@ -27,28 +27,49 @@ class EnemyBlueGhost(pygame.sprite.Sprite):
 
 
     def update(self):
+        """
+           Arguments: self
+           Application: method calls any other methods to be called or checked in each frame of the game,
+                it serves as a handle
+           Return: None
+        """
         if not self.is_dead:
             self.draw()
             self.draw_health_bar()
 
     def draw(self):
         """
-        Arguments: self, window - main screen for gameplay
+        Arguments: self
         Application: drawing of the enemy Blue Ghost in the screen
         Return: None
         """
         self.rect.x -= scroll_position_of_player[0]
-        #self.rect.y -= scroll_position_of_player[1]
         screen.blit(self.image, (self.rect.x, self.rect.y))
 
     def draw_health_bar(self):
+        """
+        Arguments: self
+        Application: drawing of the enemy Blue Ghost health bar in the screen
+        Return: None
+        """
         pygame.draw.rect(screen, (255, 0, 0), (int(self.rect.x) + 90, int(self.rect.y) - 40 , self.current_health / self.health_ratio, 30))
 
     def atack_player(self, position_of_player):
+        """
+        Arguments: self, position_of_player - position of player in x axis
+        Application: method checks if player is close enough to being attacked by the enemy, used later for events like
+            fighting and changing current animation to "fight"
+        Return: boolean True
+        """
         if self.rect.x - position_of_player < 300:
             return True
 
     def checking_is_dead_enemy(self):
+        """
+        Arguments: self
+        Application: method checks if enemy's health is equal or lower than 0
+        Return: boolean True
+        """
         if self.current_health <= 0:
             self.is_dead = True
             return True
@@ -58,7 +79,7 @@ class EnemySteamMachine(pygame.sprite.Sprite):
     def __init__(self, x, y):
         """
         Arguments: self, position - x and y position where Enemy should be placed
-        Application: setting the basic parameters of the enemy Blue Ghost
+        Application: setting the basic parameters of the enemy Steam Machine
         Return: None
         """
         pygame.sprite.Sprite.__init__(self)
@@ -116,45 +137,72 @@ class EnemySteamMachine(pygame.sprite.Sprite):
 
 
 
-    def update(self, position_x_player, player_health):
+    def update(self, position_x_player, world):
+        """
+           Arguments: self, position_x_player - position of player in X axis, player_health - health of the player
+           Application: method calls any other methods to be called or checked in each frame of the game,
+                it serves as a handle
+           Return: None
+        """
         if not self.is_dead:
             self.draw()
             self.draw_health_bar()
             self.apply_gravity()
-            self.check_collisions()
+            self.check_collisions(world)
             self.update_camera()
             self.animate()
             self.atack_player(position_x_player)
             if self.atack_player_flag:
                 self.check_is_player_visible(position_x_player)
-                self.attack_animation(player_health)
+                self.attack_animation()
 
 
     def draw(self):
         """
         Arguments: self, window - main screen for gameplay
-        Application: drawing of the enemy Steam Mech in the screen
+        Application: drawing of the enemy Steam Mech on the screen
         Return: None
         """
         self.rect.x -= scroll_position_of_player[0]
         screen.blit(pygame.transform.flip(self.image, self.flip, False), self.rect)
 
     def draw_health_bar(self):
+        """
+        Arguments: self
+        Application: drawing of the health bar of enemy Steam Mech on the screen
+        Return: None
+        """
         pygame.draw.rect(screen, (255, 0, 0), (int(self.rect.x) + 90, int(self.rect.y) - 40 , self.current_health / self.health_ratio, 30))
 
     def atack_player(self, position_of_player):
+        """
+        Arguments: self,position_of_player - position of player in X axis
+        Application: checks if enemy is able to atack player
+        Return: None
+        """
         if self.rect.x - position_of_player < 700:
             self.atack_player_flag = True
 
         else:
             self.atack_player_flag = False
 
+
     def checking_is_dead_enemy(self):
+        """
+        Arguments: self
+        Application: method checks if enemy's health is equal or lower than 0
+        Return: boolean True
+        """
         if self.current_health <= 0:
             self.is_dead = True
             return True
 
     def animate(self):
+        """
+           Arguments: self
+           Application: method is responsible for animation
+           Return: None
+        """
         current_time = pygame.time.get_ticks()
         if self.current_animation == 'walk':
             animation_speed = 120
@@ -164,6 +212,12 @@ class EnemySteamMachine(pygame.sprite.Sprite):
                 self.image = self.animation_frames[self.current_animation][self.current_frame]
 
     def check_is_player_visible(self, player_rect):
+        """
+           Arguments: self, player_rect - position of player in X axis
+           Application: method checks if player is close enough to being attacked by the enemy, used later for events like
+                fighting and changing current animation to "fight"
+           Return: None
+        """
         distance_to_player = abs(self.rect.x - player_rect)
 
         if distance_to_player < 900:
@@ -177,13 +231,22 @@ class EnemySteamMachine(pygame.sprite.Sprite):
             self.atack_player_flag = False
 
     def apply_gravity(self):
+        """
+           Arguments: self
+           Application: applies gravity by changing y value of enemy when enemy is jumping
+           Return: None
+        """
         if self.falling:
             self.velocity_y += 0.2
 
         self.change_position_y_mech += self.velocity_y
 
-    def check_collisions(self):
-        from main import world
+    def check_collisions(self, world):
+        """
+           Arguments: self, world - main scene of the game
+           Application: method checks collisions in X and Y axis
+           Return: None
+        """
         for tile in world.tile_list:
             if tile[1].colliderect(self.rect.x + self.change_position_x_mech,
                                    self.rect.y + self.change_position_y_mech, self.width, self.height):
@@ -207,7 +270,7 @@ class EnemySteamMachine(pygame.sprite.Sprite):
         self.rect.x += self.change_position_x_mech
         self.rect.y += self.change_position_y_mech
 
-    def attack_animation(self, player_health):
+    def attack_animation(self):
         """
         Arguments: self
         Application: Plays the attack animation.
@@ -233,6 +296,11 @@ class EnemySteamMachine(pygame.sprite.Sprite):
                 self.current_frame = 0
 
     def received_damage_animation(self):
+        """
+        Arguments: self
+        Application: Plays the 'hurt' animation, when enemy get hurts by the player
+        Return: None
+        """
         current_time = pygame.time.get_ticks()
         previous_animation = self.current_animation
 
@@ -246,10 +314,10 @@ class EnemySteamMachine(pygame.sprite.Sprite):
                 self.current_animation = previous_animation
 
 class EnemyBossFirstLevel(pygame.sprite.Sprite):
-    def __init__(self, x, y):
+    def __init__(self, x: int, y: int):
         """
         Arguments: self, position - x and y position where Enemy should be placed
-        Application: setting the basic parameters of the enemy Blue Ghost
+        Application: setting the basic parameters of the enemy
         Return: None
         """
         pygame.sprite.Sprite.__init__(self)
@@ -271,11 +339,12 @@ class EnemyBossFirstLevel(pygame.sprite.Sprite):
         self.ground_collision = False
         self.flip = True
 
+        # Assets
         self.movement_sprite_sheet = pygame.image.load('assets/graphics/boss/VampireBat_walk.png').convert_alpha()
-
         self.fight_1_sprite_sheet = pygame.image.load('assets/graphics/boss/VampireBat_attack1.png').convert_alpha()
         self.hurt_sprite_sheet = pygame.image.load('assets/graphics/boss/VampireBat_hurt.png').convert_alpha()
 
+        #Animation
         self.frame_width = self.movement_sprite_sheet.get_width() // 6
         self.frame_height = self.movement_sprite_sheet.get_height()
         self.last_walk_animation_time = pygame.time.get_ticks()
@@ -287,7 +356,6 @@ class EnemyBossFirstLevel(pygame.sprite.Sprite):
         self.send_damage_to_player_flag = False
         self.animation_hurt_play_count = 0
         self.exp_for_player = 60
-
         self.animation_frames = {
             'fight': [pygame.transform.scale(
                 self.fight_1_sprite_sheet.subsurface((i * self.frame_width, 0, self.frame_width, self.frame_height)),
@@ -299,38 +367,53 @@ class EnemyBossFirstLevel(pygame.sprite.Sprite):
                 self.hurt_sprite_sheet.subsurface((i * self.frame_width, 0, self.frame_width, self.frame_height)),
                 (400, 400)) for i in range(4)],
         }
-
         self.current_animation = 'walk'
         self.current_frame = 0
         self.image = self.animation_frames[self.current_animation][self.current_frame]
 
-    def update(self, position_x_player, player_health):
+    def update(self, position_x_player, world):
+        """
+           Arguments: self, position_x_player - position of player in X axis
+           Application: method calls any other methods to be called or checked in each frame of the game,
+                it serves as a handle
+           Return: None
+        """
         if not self.is_dead:
             self.draw()
             self.draw_health_bar()
             self.apply_gravity()
-            self.check_collisions()
+            self.check_collisions(world)
             self.update_camera()
             self.animate()
             self.atack_player(position_x_player)
             if self.atack_player_flag:
                 self.check_is_player_visible(position_x_player)
-                self.attack_animation(player_health)
+                self.attack_animation()
 
     def draw(self):
         """
-        Arguments: self, window - main screen for gameplay
-        Application: drawing of the enemy Steam Mech in the screen
+        Arguments: self
+        Application: drawing of the enemy in the screen
         Return: None
         """
         self.rect.x -= scroll_position_of_player[0]
         screen.blit(pygame.transform.flip(self.image, self.flip, False), self.rect)
 
     def draw_health_bar(self):
+        """
+        Arguments: self
+        Application: drawing of the enemy's health bar in the screen
+        Return: None
+        """
         pygame.draw.rect(screen, (255, 0, 0),
                          (int(self.rect.x) + 90, int(self.rect.y) - 40, self.current_health / self.health_ratio, 30))
 
     def atack_player(self, position_of_player):
+        """
+        Arguments: self, position_of_player- position of player in X axis
+        Application: method checks if enemy is able to atack player, if yes set flag atack_player_flag to True
+        Return: None
+        """
         if self.rect.x - position_of_player < 700:
             self.atack_player_flag = True
 
@@ -338,11 +421,21 @@ class EnemyBossFirstLevel(pygame.sprite.Sprite):
             self.atack_player_flag = False
 
     def checking_is_dead_enemy(self):
+        """
+        Arguments: self
+        Application: method checks if enemy's health is equal or lower than 0
+        Return: boolean True
+        """
         if self.current_health <= 0:
             self.is_dead = True
             return True
 
     def animate(self):
+        """
+        Arguments: self
+        Application: method is responsible for animation
+        Return: none
+        """
         current_time = pygame.time.get_ticks()
         if self.current_animation == 'walk':
             animation_speed = 120
@@ -352,6 +445,11 @@ class EnemyBossFirstLevel(pygame.sprite.Sprite):
                 self.image = self.animation_frames[self.current_animation][self.current_frame]
 
     def check_is_player_visible(self, player_rect):
+        """
+        Arguments: self
+        Application: method is responsible for animation
+        Return: none
+        """
         distance_to_player = abs(self.rect.x - player_rect)
 
         if distance_to_player < 900:
@@ -367,13 +465,22 @@ class EnemyBossFirstLevel(pygame.sprite.Sprite):
             self.atack_player_flag = False
 
     def apply_gravity(self):
+        """
+        Arguments: self
+        Application: method applies gravity by changing y value of rect of enemy
+        Return: none
+        """
         if self.falling:
             self.velocity_y += 0.2
 
         self.change_position_y_mech += self.velocity_y
 
-    def check_collisions(self):
-        from main import world
+    def check_collisions(self, world):
+        """
+        Arguments: self, world - main scene of the game
+        Application: method is responsible for animation
+        Return: none
+        """
         for tile in world.tile_list:
             if tile[1].colliderect(self.rect.x + self.change_position_x_mech,
                                    self.rect.y + self.change_position_y_mech, self.width, self.height):
@@ -397,7 +504,7 @@ class EnemyBossFirstLevel(pygame.sprite.Sprite):
         self.rect.x += self.change_position_x_mech
         self.rect.y += self.change_position_y_mech
 
-    def attack_animation(self, player_health):
+    def attack_animation(self):
         """
         Arguments: self
         Application: Plays the attack animation.
@@ -423,6 +530,11 @@ class EnemyBossFirstLevel(pygame.sprite.Sprite):
                 self.current_frame = 0
 
     def received_damage_animation(self):
+        """
+        Arguments: self
+        Application: Plays the hurt animation when enemy received damage
+        Return: None
+        """
         current_time = pygame.time.get_ticks()
         previous_animation = self.current_animation
 
@@ -461,6 +573,12 @@ class EnemyStaticMech(pygame.sprite.Sprite):
 
 
     def update(self):
+        """
+           Arguments: self
+           Application: method calls any other methods to be called or checked in each frame of the game,
+                it serves as a handle
+           Return: None
+        """
         if not self.is_dead:
             self.draw()
             self.draw_health_bar()
@@ -468,7 +586,7 @@ class EnemyStaticMech(pygame.sprite.Sprite):
     def draw(self):
         """
         Arguments: self, window - main screen for gameplay
-        Application: drawing of the enemy Blue Ghost in the screen
+        Application: drawing of the enemy Static Mech in the screen
         Return: None
         """
         self.rect.x -= scroll_position_of_player[0]
@@ -476,10 +594,20 @@ class EnemyStaticMech(pygame.sprite.Sprite):
 
 
     def draw_health_bar(self):
+        """
+        Arguments: self
+        Application: drawing of the health of enemy Static Mech in the screen
+        Return: None
+        """
         pygame.draw.rect(screen, (255, 0, 0), (int(self.rect.x) -20, int(self.rect.y) - 40 , self.current_health / self.health_ratio, 30))
 
 
     def checking_is_dead_enemy(self):
+        """
+        Arguments: self
+        Application: method checks if health of enemy is equal or lower than 0
+        Return: boolean True
+        """
         if self.current_health <= 0:
             self.is_dead = True
             return True

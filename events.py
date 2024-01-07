@@ -1,6 +1,11 @@
 from settings import *
 import bullets
+"""
+    These functions are used to better and nicer implement, among others, 
+    the collision of the bullets with the enemy using groups from the pygame library.
+    Functions are later called in main file in main loop of the game.
 
+"""
 
 def handle_blue_ghost_collision_with_bullet(bullet_group, enemy_group, player):
     for bullet in bullet_group:

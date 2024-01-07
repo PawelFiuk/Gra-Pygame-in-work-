@@ -7,6 +7,11 @@ import UI
 
 class SkillTree:
     def __init__(self, player):
+        """
+        Arguments: self, player - main character of the game
+        Application: setting default parameters for ability tree, loading images etc.
+        Return: None
+        """
         self.display_surface = pygame.display.get_surface()
         self.player = player
         self.height = self.display_surface.get_height() * 0.8
@@ -31,10 +36,22 @@ class SkillTree:
         self.add_health_button = button.Button(850, 570, add_ability_button_img, 0.1)
 
     def update(self, player):
+        """
+           Arguments: self, player - object of the main character in game
+           Application: method calls any other methods to be called or checked in each frame of the game,
+                it serves as a handle
+           Return: None
+        """
         self.draw_skill_tree(player)
 
 
     def draw_skill_tree(self, player):
+        """
+           Arguments: self, player - object of the main character in game
+           Application: method is drawing new screen of ability tree, checks when there are available ability points of
+                the player
+           Return: None
+        """
         paused = True
         while paused:
             current_time = time.time()
