@@ -7,8 +7,10 @@ class World:
         self.y_cord = 0
         self.tile_list = []
         self.map_data = data
-        dirt_img = pygame.image.load('assets/map_tiles/dirt_1.png').convert_alpha()
-        stone_img = pygame.image.load('assets/map_tiles/stone 1.png').convert_alpha()
+        dark_underground_tile_img = pygame.image.load('assets/map_tiles/dark_underground_tile_1.png').convert_alpha()
+        dark_top_tile_img = pygame.image.load('assets/map_tiles/dark_top_tile_2.png').convert_alpha()
+        dark_right_tile_img = pygame.image.load('assets/map_tiles/dark_right_tile_3.png').convert_alpha()
+        dark_left_tile_img = pygame.image.load('assets/map_tiles/dark_left_tile_4.png').convert_alpha()
         background = pygame.image.load("assets/graphics/steampunk_city_1.jpg").convert_alpha()
         self.bg_background = pygame.transform.scale(background, (SCREEN_WIDTH, SCREEN_HEIGHT)).convert_alpha()
 
@@ -17,19 +19,33 @@ class World:
             col_count = 0
             for tile in row:
                 if tile == 1:
-                    dirt_img = pygame.transform.scale(dirt_img, (TILE_SIZE, TILE_SIZE))
-                    img_rect_dirt = dirt_img.get_rect()
+                    dark_underground_tile_img = pygame.transform.scale(dark_underground_tile_img, (TILE_SIZE, TILE_SIZE))
+                    img_rect_dirt = dark_underground_tile_img.get_rect()
                     img_rect_dirt.x = col_count * TILE_SIZE
                     img_rect_dirt.y = self.row_count * TILE_SIZE - TILE_SIZE
-                    tile = [dirt_img, img_rect_dirt]
+                    tile = [dark_underground_tile_img, img_rect_dirt]
                     self.tile_list.append(tile)
 
                 if tile == 2:
-                    stone_img = pygame.transform.scale(stone_img, (TILE_SIZE, TILE_SIZE))
-                    img_rect_stone = stone_img.get_rect()
+                    dark_top_tile_img = pygame.transform.scale(dark_top_tile_img, (TILE_SIZE, TILE_SIZE))
+                    img_rect_stone = dark_top_tile_img.get_rect()
                     img_rect_stone.x = col_count * TILE_SIZE
                     img_rect_stone.y = self.row_count * TILE_SIZE - TILE_SIZE
-                    tile = [stone_img, img_rect_stone]
+                    tile = [dark_top_tile_img, img_rect_stone]
+                    self.tile_list.append(tile)
+                if tile == 3:
+                    dark_right_tile_img = pygame.transform.scale(dark_right_tile_img, (TILE_SIZE, TILE_SIZE))
+                    img_rect_right_stone = dark_right_tile_img.get_rect()
+                    img_rect_right_stone.x = col_count * TILE_SIZE
+                    img_rect_right_stone.y = self.row_count * TILE_SIZE - TILE_SIZE
+                    tile = [dark_right_tile_img, img_rect_right_stone]
+                    self.tile_list.append(tile)
+                if tile == 4:
+                    dark_left_tile_img = pygame.transform.scale(dark_left_tile_img, (TILE_SIZE, TILE_SIZE))
+                    img_rect_left_stone = dark_left_tile_img.get_rect()
+                    img_rect_left_stone.x = col_count * TILE_SIZE
+                    img_rect_left_stone.y = self.row_count * TILE_SIZE - TILE_SIZE
+                    tile = [dark_left_tile_img, img_rect_left_stone]
                     self.tile_list.append(tile)
                 col_count += 1
             self.row_count += 1
