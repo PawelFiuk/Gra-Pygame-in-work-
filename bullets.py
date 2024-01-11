@@ -1,6 +1,4 @@
 import pygame.sprite
-from pkg_resources import resource_dir
-
 from settings import *
 import os
 

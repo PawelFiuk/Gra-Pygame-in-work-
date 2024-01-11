@@ -19,7 +19,7 @@ class AmmunitionPackage(pygame.sprite.Sprite):
         self.height = self.image.get_height()
         self.is_take = False
 
-    def update_package(self, window):
+    def update(self, window):
         """
            Arguments: self, window - main scene for game
            Application: method calls any other methods to be called or checked in each frame of the game,
