@@ -46,23 +46,27 @@ npc_1 = npc.NPC(300, SCREEN_HEIGHT - 800, "assets/npc/npc_dirty.png")
 npc_2 = npc.NPC2(4900, SCREEN_HEIGHT - 800, "assets/npc/Man.png")
 airplane_level_1 = airplane.Airplane(5500, SCREEN_HEIGHT - 1000, "assets/graphics/ship.png")
 mech_enemy = EnemySteamMachine(3700, SCREEN_HEIGHT-1000)
+mech_enemy_2 = EnemySteamMachine(11500, SCREEN_HEIGHT-1000)
+mech_enemy_3 = EnemySteamMachine(13000, SCREEN_HEIGHT-1000)
+mech_enemy_4 = EnemySteamMachine(14000, SCREEN_HEIGHT-1000)
 ammo_package_level_1_1 = ammunition_package.AmmunitionPackage(2000, SCREEN_HEIGHT - 500)
+ammo_package_level_1_2 = ammunition_package.AmmunitionPackage(13000, SCREEN_HEIGHT - 500)
 aid_kit_1 = first_aid_kit.FirstAidKit(1500, SCREEN_HEIGHT - 500)
 skill_tree_for_player = skill_tree.SkillTree(player)
-snus_1_1 = magic_snus.MagicSnus(2600, SCREEN_HEIGHT - 500)
+snus_1_1 = magic_snus.MagicSnus(14000, SCREEN_HEIGHT - 500)
 static_mech_1 = EnemyStaticMech(7000, 930)
 static_mech_2 = EnemyStaticMech(7600, 930)
 static_mech_3 = EnemyStaticMech(8400, 930)
 static_mech_4 = EnemyStaticMech(9500, 930)
-boss = EnemyBossFirstLevel(11500, SCREEN_HEIGHT - 800)
+boss = EnemyBossFirstLevel(15500, SCREEN_HEIGHT - 800)
 
 
 # Adding objects to groups
 enemies_group.add(enemy_1)
-mech_group.add(mech_enemy)
+mech_group.add(mech_enemy, mech_enemy_2, mech_enemy_3, mech_enemy_4)
 static_mech_group.add(static_mech_1, static_mech_2, static_mech_3, static_mech_4)
 aid_kit_group.add(aid_kit_1)
-ammo_package_group.add(ammo_package_level_1_1)
+ammo_package_group.add(ammo_package_level_1_1, ammo_package_level_1_2)
 blue_ghost_group.add(enemy_1)
 boss_group.add(boss)
 
@@ -165,13 +169,8 @@ while running_game:
     events.handle_grenade_collision(grenades_group, all_enemies_group, player, explosions_group)
     events.handle_boss_damage(boss_group, player)
     events.handle_boss_collision_with_bullet(bullet_groups, boss_group, player)
+    events.handle_pickup_ammo_package(ammo_package_group, player)
 
-
-    if player.rect.colliderect(ammo_package_level_1_1):
-        ammo_package_level_1_1.action_ammo(player)
-        ammo_package_level_1_1.kill()
-        ammo_package_group.remove(ammo_package_level_1_1)
-        out_of_main_ammo = False
 
     if player.rect.colliderect(aid_kit_1):
         aid_kit_1.action_health(player)
@@ -209,7 +208,8 @@ while running_game:
     airplane_bullets_group.update()
     airplane_bullets_group.draw(screen)
     enemy_1.update()
-    mech_enemy.update(player.rect.x, world)
+    mech_group.update(player.rect.x, world)
+
     boss_group.update(player.rect.x, world)
     explosions_group.draw(screen)
     explosions_group.update()
@@ -217,7 +217,7 @@ while running_game:
     npc_1.update(screen)
     npc_2.update(screen)
     airplane_level_1.update(screen, world)
-    ammo_package_level_1_1.update_package(screen)
+    ammo_package_group.update(screen)
     aid_kit_1.update_package(screen)
     static_mech_group.draw(screen)
     static_mech_group.update()
