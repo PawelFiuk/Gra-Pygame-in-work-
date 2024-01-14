@@ -64,7 +64,6 @@ class Airplane(pygame.sprite.Sprite):
             Return: None
          """
         keys = pygame.key.get_pressed()
-
         self.change_position_x_airplane= 0
         self.change_position_y_airplane = 0
 

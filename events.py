@@ -86,9 +86,9 @@ def handle_boss_collision_with_bullet(bullet_groups, boss_group, player):
                     boss.kill()
 
 def handle_pickup_ammo_package(ammo_package_group, player):
-    for ammo_package in ammo_package_group:
-        if player.rect.colliderect(ammo_package):
-            ammo_package.action_ammo(player)
-            ammo_package.kill()
-            ammo_package_group.remove(ammo_package)
-            out_of_main_ammo = False
+    if not player.current_amount_grenades == player.max_grenade_amount or not player.main_ammo_magazine == player.max_main_ammo_magazine:
+        for ammo_package in ammo_package_group:
+            if player.rect.colliderect(ammo_package):
+                ammo_package.action_ammo(player)
+                ammo_package.kill()
+                żout_of_main_ammo = False
