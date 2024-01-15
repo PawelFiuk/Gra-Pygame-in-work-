@@ -1,4 +1,5 @@
 from settings import *
+import pygame
 class Physics:
     @staticmethod
     def check_collision(player, world):
@@ -18,7 +19,6 @@ class Physics:
                     player.is_jumping = False
                     scroll_position_of_player[1] = 0
                     player.change_position_y_player = 0
-
     @staticmethod
     def apply_gravity(player):
         if player.falling:

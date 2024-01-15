@@ -1,7 +1,9 @@
+import pygame.sprite
+
 from settings import *
 
 
-class World:
+class World():
     def __init__(self, data):
         self.x_cord = 0
         self.y_cord = 0
