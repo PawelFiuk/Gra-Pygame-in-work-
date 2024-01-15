@@ -256,12 +256,12 @@ class Player(pygame.sprite.Sprite, physics.Physics):
         if not self.flip:
             pos_x = self.rect.x
             pos_y = self.rect.y
-            return Bullets([pos_x + 460, pos_y + 220], False)
+            return Bullets([pos_x + 260, pos_y + 220], False)
 
         if self.flip:
             pos_x = self.rect.x
             pos_y = self.rect.y
-            return Bullets([pos_x + 115, pos_y + 220], True)
+            return Bullets([pos_x + 250, pos_y + 220], True)
 
     def checking_is_dead_player(self):
         """
