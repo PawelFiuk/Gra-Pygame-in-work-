@@ -95,7 +95,7 @@ class Player(pygame.sprite.Sprite, physics.Physics):
         self.image = self.animation_frames[self.current_animation][self.current_frame]
 
 
-    def update(self, world):
+    def update(self, world, airplane):
         """
            Arguments: self, world - world is an instance of the World object that generates the entire game world
            Application: method calls any other methods to be called or checked in each frame of the game,
@@ -103,17 +103,20 @@ class Player(pygame.sprite.Sprite, physics.Physics):
            Return: None
         """
         self.draw()
-        self.handle_movement()
+
         self.animate()
         self.apply_gravity()
         self.check_collisions(world)
-        self.update_camera()
         self.checking_is_dead_player()
         self.health_bar()
         self.show_main_ammo()
         self.draw_experience_bar(screen)
         self.update_mask()
         self.message_about_avalaible_ability_points()
+        self.airplane_updates(airplane)
+        if not is_player_in_airplane:
+            self.update_camera()
+            self.handle_movement()
 
     def handle_movement(self):
         """
@@ -203,6 +206,8 @@ class Player(pygame.sprite.Sprite, physics.Physics):
 
         # Update scrolling for Y axis
         scroll_position_of_player[1] = self.change_position_y_player
+
+
 
     def draw(self):
         """
@@ -403,3 +408,9 @@ class Player(pygame.sprite.Sprite, physics.Physics):
             pos_x = self.rect.x
             pos_y = self.rect.y
             return Grenade([pos_x +460, pos_y + 220], True)
+
+    def airplane_updates(self, airplane):
+        if is_player_in_airplane:
+            self.rect.x = airplane.rect.x
+            self.rect.y = airplane.rect.y
+

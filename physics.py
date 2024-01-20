@@ -32,14 +32,17 @@ class Physics:
     @staticmethod
     def check_collision_airplane(airplane, world):
         for tile in world.tile_list:
-            if tile[1].colliderect(airplane.rect.x + airplane.change_position_x_airplane ,
-                                   airplane.rect.y + airplane.change_position_y_airplane, airplane.width, airplane.height):
+            if tile[1].colliderect(airplane.rect.x + airplane.change_position_x_airplane,
+                                   airplane.rect.y, airplane.width, airplane.height):
                 airplane.change_position_x_airplane = 0
+                #airplane.change_position_x_airplane = tile[1].top - airplane.rect.bottom
                 scroll_position_of_player[0] = 0
+
 
             if tile[1].colliderect(airplane.rect.x, airplane.rect.y + airplane.change_position_y_airplane,
                                    airplane.width, airplane.height):
                 airplane.change_position_y_airplane = tile[1].top - airplane.rect.bottom
                 airplane.velocity_y = 0
                 scroll_position_of_player[1] = 0
-                airplane.change_position_y_airplane = 0
+                #airplane.change_position_y_airplane = 0
+

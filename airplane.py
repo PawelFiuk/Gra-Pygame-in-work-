@@ -3,6 +3,7 @@ from settings import *
 import physics
 from bullets import AirplaneBulelts
 
+
 class Airplane(pygame.sprite.Sprite):
     def __init__(self, x: int, y: int, image_source):
         """
@@ -83,6 +84,7 @@ class Airplane(pygame.sprite.Sprite):
                on the player's movement.
            Return: None
         """
+
         physics.Physics.check_collision_airplane(self, world)
 
     def shot_bullet(self):

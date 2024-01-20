@@ -44,7 +44,7 @@ class AmmunitionPackage(pygame.sprite.Sprite):
                 player can't pick up a package, if something is missing, package will add an ammunition
            Return: None
         """
-        if not self.is_take and not player.main_ammo_magazine == player.max_main_ammo_magazine and not player.current_amount_grenades == player.max_grenade_amount:
+        if not self.is_take:
             remaining_ammo = player.max_main_ammo_magazine - player.main_ammo_magazine
             if remaining_ammo < 5:
                 player.main_ammo_magazine = player.max_main_ammo_magazine
