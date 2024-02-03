@@ -21,7 +21,6 @@ class Player(pygame.sprite.Sprite, physics.Physics):
         pygame.sprite.Sprite.__init__(self)
         image_augustus = pygame.image.load('assets/graphics/augustus/SteamMan.png').convert_alpha()
         self.image = pygame.transform.scale(image_augustus, (400, 400)).convert_alpha()
-        self.image_idle = pygame.transform.scale(image_augustus, (400, 400)).convert_alpha()
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
@@ -37,9 +36,6 @@ class Player(pygame.sprite.Sprite, physics.Physics):
         self.ground_collision = False
         self.experience_levels = {1: 20, 2: 50, 3: 75, 4: 100, 5:150, 6:200, 7:250}
         self.experience_bar_color = (255, 215, 0)  # Gold color for the XP bar
-        self.health_bar_length = 300
-        self.max_health = 100
-        self.health_ratio = self.max_health / self.health_bar_length
         self.is_jumping = False
         self.airplane_mode = False
         self.mask = from_surface(self.image)
@@ -48,10 +44,8 @@ class Player(pygame.sprite.Sprite, physics.Physics):
         self.health_bar_colour_normal = (0, 255, 0)
         self.health_bar_colour_snus_effect = [0, 0, 255] # Blue colour got snus health bar
         self.actual_health_bar = self.health_bar_colour_normal
-        self.invincibility_time = 0
-        self.is_invincible = False
 
-        #stats
+        # Stats
         self.current_health = 100
         self.max_health = 100
         self.level = 1
@@ -62,16 +56,11 @@ class Player(pygame.sprite.Sprite, physics.Physics):
         self.max_grenade_amount = 5
         self.current_amount_grenades = 5
 
-        #animation
+        # Animation
         self.jump_start_time = 0
-        self.last_idle_animation_time = time.time()
-        self.idle_animation_triggered = False
-
-        # Load the sprite sheet with animation frames
         self.movement_sprite_sheet = pygame.image.load('assets/graphics/augustus/SteamMan_run.png').convert_alpha()
         self.idle_sprite_sheet = pygame.image.load('assets/graphics/augustus/SteamMan.png').convert_alpha()
         self.jump_sprite_sheet = pygame.image.load('assets/graphics/augustus/SteamMan_jump.png').convert_alpha()
-
         self.frame_width = self.movement_sprite_sheet.get_width() // 6  # Assuming 6 frames in a row
         self.frame_height = self.movement_sprite_sheet.get_height()
         self.last_walk_animation_time = pygame.time.get_ticks()
@@ -89,11 +78,8 @@ class Player(pygame.sprite.Sprite, physics.Physics):
                 self.jump_sprite_sheet.subsurface((i * self.frame_width, 0, self.frame_width, self.frame_height)),
                 (400, 400)) for i in range(6)],
         }
-
         self.current_animation = 'idle'  # Default animation
         self.current_frame = 0
-        self.image = self.animation_frames[self.current_animation][self.current_frame]
-
 
     def update(self, world, airplane):
         """
@@ -103,14 +89,13 @@ class Player(pygame.sprite.Sprite, physics.Physics):
            Return: None
         """
         self.draw()
-
         self.animate()
         self.apply_gravity()
         self.check_collisions(world)
         self.checking_is_dead_player()
         self.health_bar()
         self.show_main_ammo()
-        self.draw_experience_bar(screen)
+        self.draw_experience_bar()
         self.update_mask()
         self.message_about_avalaible_ability_points()
         self.airplane_updates(airplane)
@@ -126,7 +111,6 @@ class Player(pygame.sprite.Sprite, physics.Physics):
            Return: None
         """
         key = pygame.key.get_pressed()
-
         self.change_position_x_player = 0
         self.change_position_y_player = 0
 
@@ -196,7 +180,6 @@ class Player(pygame.sprite.Sprite, physics.Physics):
             x_screen = resolution[0] / 2
             self.rect.x = x_screen
             scroll_position_of_player[0] = self.change_position_x_player
-
         elif self.rect.x <= resolution[0] - 1800:
             x_screen_left = resolution[0] - 1800
             self.rect.x = x_screen_left
@@ -206,8 +189,6 @@ class Player(pygame.sprite.Sprite, physics.Physics):
 
         # Update scrolling for Y axis
         scroll_position_of_player[1] = self.change_position_y_player
-
-
 
     def draw(self):
         """
@@ -231,7 +212,6 @@ class Player(pygame.sprite.Sprite, physics.Physics):
         """
         health_bar_width = 300
         health_bar_height = 30
-
         pygame.draw.rect(screen, self.missing_health_bar_colour, [10, 10, health_bar_width, health_bar_height])
         if not self.is_magic_snus_taken:
             pygame.draw.rect(screen, self.health_bar_colour_normal,
@@ -293,7 +273,6 @@ class Player(pygame.sprite.Sprite, physics.Physics):
             self.image = self.animation_frames['jump'][jump_frame_index]
             if self.is_jumping and (jump_frame_index == 3):
                 self.image = self.animation_frames['jump'][3]
-
         else:
             current_time = pygame.time.get_ticks()
             if self.current_animation == 'walk':
@@ -370,8 +349,7 @@ class Player(pygame.sprite.Sprite, physics.Physics):
             text_level = font_for_ability_message.render(message_about_abilit_points, True, (255, 255, 255))
             screen.blit(text_level, (1050, 10))
 
-
-    def draw_experience_bar(self, screen):
+    def draw_experience_bar(self):
         """
          Arguments: self, screeen - screen is instance of main window of game
          Application: the method is responsible for drawing experience bar on screen, on right sight of health bar,
@@ -382,7 +360,6 @@ class Player(pygame.sprite.Sprite, physics.Physics):
         xp_bar_width = 300
         xp_bar_height = 30
         xp_percentage = (self.experience / self.experience_levels[self.level]) * xp_bar_max_width
-
         pygame.draw.rect(screen, (255, 255, 255),
                          [350, 10, xp_bar_width, xp_bar_height])
         pygame.draw.rect(screen, self.experience_bar_color,
@@ -413,4 +390,3 @@ class Player(pygame.sprite.Sprite, physics.Physics):
         if is_player_in_airplane:
             self.rect.x = airplane.rect.x
             self.rect.y = airplane.rect.y
-

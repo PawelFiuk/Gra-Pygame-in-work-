@@ -107,6 +107,10 @@ while running_game:
 
                 if player.rect.colliderect(npc_1.rect) or player.rect.colliderect(npc_2.rect):
                     npc_1.dialog_box() if player.rect.colliderect(npc_1.rect) else npc_2.dialog_box()
+                if tutorial_flag:
+                    if player.rect.colliderect(npc_1.rect) or player.rect.colliderect(npc_2.rect):
+                        tutorial_flag = False
+                        npc_1.clicked_tutorial = True
 
         elif airplane_level_1.player_in_airplane and keys[pygame.K_e] and current_time - time_entered_airplane >= 2.0:
             airplane_level_1.player_in_airplane = False
@@ -223,7 +227,7 @@ while running_game:
 
     npc_1.update(screen)
     npc_2.update(screen)
-    airplane_level_1.update(screen, world)
+    airplane_level_1.update(screen, world, player)
     ammo_package_group.update(screen)
     aid_kit_1.update_package(screen)
     static_mech_group.draw(screen)

@@ -27,14 +27,14 @@ class Airplane(pygame.sprite.Sprite):
         self.change_position_x_airplane = 0
         self.change_position_y_airplane = 0
 
-    def update(self, window, world):
+    def update(self, window, world, player):
         """
            Arguments: self, world - world is an instance of the World object that generates the entire game world
            Application: method calls any other methods to be called or checked in each frame of the game,
                 it serves as a handle
            Return: None
         """
-        self.update_camera()
+        self.update_camera(player)
         self.draw(window)
         if self.player_in_airplane:
             self.control()
@@ -48,7 +48,7 @@ class Airplane(pygame.sprite.Sprite):
         """
         window.blit(self.image, (self.rect.x, self.rect.y))
 
-    def update_camera(self):
+    def update_camera(self, player):
         """
         Arguments: self
         Application: adds aircraft position values to update the camera
@@ -57,6 +57,9 @@ class Airplane(pygame.sprite.Sprite):
         self.rect.x -= scroll_position_of_player[0]
         self.rect.x += self.change_position_x_airplane
         self.rect.y += self.change_position_y_airplane
+        if player.airplane_mode:
+            player.rect.x = self.rect.x
+            player.rect.y = self.rect.y
 
     def control(self):
         """

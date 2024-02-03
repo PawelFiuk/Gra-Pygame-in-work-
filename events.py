@@ -94,9 +94,10 @@ def handle_pickup_ammo_package(ammo_package_group, player):
                 return True
 
 def fell_into_darkness(player):
-    if player.rect.y > SCREEN_HEIGHT:
-        player.current_health = 0
+    if not player.airplane_mode:
+        if player.rect.y > SCREEN_HEIGHT:
+            player.current_health = 0
 
 def fell_into_darkness_airplane(airplane, player):
-    if airplane.rect.y > SCREEN_HEIGHT - 100:
+    if airplane.rect.y > SCREEN_HEIGHT:
         player.current_health = 0

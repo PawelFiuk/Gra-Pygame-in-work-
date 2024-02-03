@@ -16,7 +16,6 @@ FPS = 60
 
 info = pygame.display.Info()
 desktop_size = (info.current_w, info.current_h)
-print(desktop_size)
 screen = pygame.display.set_mode(desktop_size, pygame.FULLSCREEN)
 screen_menu = pygame.display.set_mode(desktop_size, pygame.FULLSCREEN)
 resolution = (desktop_size[0], desktop_size[1])
@@ -60,14 +59,15 @@ time_entered_airplane = 0.0
 
 # Global variables for game
 key = pygame.key.get_pressed()
+tutorial_flag = True
 play_menu_theme_music = True
 pygame.font.init()
-font = pygame.font.SysFont(pygame.font.get_default_font(), 64)
-font_for_dialogs = pygame.font.SysFont(pygame.font.get_default_font(), 25)
-font_for_ability_message = pygame.font.SysFont(pygame.font.get_default_font(), 18)
-font_skill_tree = pygame.font.SysFont(pygame.font.get_default_font(), 64)
+font = pygame.font.SysFont('calibri', 64)
+font_for_dialogs = pygame.font.SysFont('calibri', 25)
+font_for_ability_message = pygame.font.SysFont('calibri', 18)
+font_skill_tree = pygame.font.SysFont('calibri', 64)
 TILE_SIZE = 100
-dialogue_font = pygame.font.SysFont(pygame.font.get_default_font(), 16)
+dialogue_font = pygame.font.SysFont('calibri', 12)
 dialogue_switch = False
 #current_time = time.time()
 last_esc_time = 0
