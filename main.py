@@ -40,7 +40,9 @@ boss_group = pygame.sprite.Group()
 
 # Making objects of game
 world = world.World(world_data)
-player = player.Player(100, SCREEN_HEIGHT - 800)
+player_object = player.Player(100, SCREEN_HEIGHT - 800)
+player_ui = player.PlayerUI(player_object)
+player_experience_mechanism = player.PlayerLevelMechanism(player_object)
 enemy_1 = EnemyBlueGhost(2500, SCREEN_HEIGHT - 800)
 npc_1 = npc.NPC(300, SCREEN_HEIGHT - 800, "assets/npc/npc_dirty.png")
 npc_2 = npc.NPC2(4900, SCREEN_HEIGHT - 800, "assets/npc/Man.png")
@@ -54,7 +56,7 @@ ammo_package_level_1_2 = ammunition_package.AmmunitionPackage(13000, SCREEN_HEIG
 ammo_package_level_1_3 = ammunition_package.AmmunitionPackage(12000, SCREEN_HEIGHT - 500)
 aid_kit_1 = first_aid_kit.FirstAidKit(1500, SCREEN_HEIGHT - 500)
 aid_kit_2 = first_aid_kit.FirstAidKit(12100, SCREEN_HEIGHT - 500)
-skill_tree_for_player = skill_tree.SkillTree(player)
+skill_tree_for_player = skill_tree.SkillTree(player_object)
 snus_1_1 = magic_snus.MagicSnus(14000, SCREEN_HEIGHT - 500)
 static_mech_1 = EnemyStaticMech(7000, 930)
 static_mech_2 = EnemyStaticMech(7600, 930)
@@ -100,56 +102,56 @@ while running_game:
 
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_e:
-                if player.rect.colliderect(airplane_level_1.rect) and not airplane_level_1.player_in_airplane:
+                if player_object.rect.colliderect(airplane_level_1.rect) and not airplane_level_1.player_in_airplane:
                     time_entered_airplane = current_time
                     airplane_level_1.player_in_airplane = True
-                    player.enter_airplane_mode()
+                    player_object.enter_airplane_mode()
 
-                if player.rect.colliderect(npc_1.rect) or player.rect.colliderect(npc_2.rect):
-                    npc_1.dialog_box() if player.rect.colliderect(npc_1.rect) else npc_2.dialog_box()
+                if player_object.rect.colliderect(npc_1.rect) or player_object.rect.colliderect(npc_2.rect):
+                    npc_1.dialog_box() if player_object.rect.colliderect(npc_1.rect) else npc_2.dialog_box()
                 if tutorial_flag:
-                    if player.rect.colliderect(npc_1.rect) or player.rect.colliderect(npc_2.rect):
+                    if player_object.rect.colliderect(npc_1.rect) or player_object.rect.colliderect(npc_2.rect):
                         tutorial_flag = False
                         npc_1.clicked_tutorial = True
 
         elif airplane_level_1.player_in_airplane and keys[pygame.K_e] and current_time - time_entered_airplane >= 2.0:
             airplane_level_1.player_in_airplane = False
-            player.exit_airplane_mode(airplane_level_1.rect.x, airplane_level_1.rect.y)
+            player_object.exit_airplane_mode(airplane_level_1.rect.x, airplane_level_1.rect.y)
 
         elif keys[pygame.K_r]:
-            skill_tree_for_player.update(player)
+            skill_tree_for_player.update(player_object)
 
     # mechanics of shooting
     if is_ready_shooting:
         if pygame.key.get_pressed()[pygame.K_c] and not airplane_level_1.player_in_airplane:
-            if current_time - last_shot_time_main_weapon > SHOOT_DELAY and player.main_ammo_magazine > 0:
+            if current_time - last_shot_time_main_weapon > SHOOT_DELAY and player_object.main_ammo_magazine > 0:
                 sound.shotgun_sound()
                 last_shot_time_main_weapon = current_time
-                bullet_groups.add(player.shot_bullet())
-                if not player.is_magic_snus_taken:
-                    player.main_ammo_magazine -= 1
-                if player.main_ammo_magazine < 1:
-                    player.main_ammo_magazine = 0
+                bullet_groups.add(player_object.shot_bullet())
+                if not player_object.is_magic_snus_taken:
+                    player_object.main_ammo_magazine -= 1
+                if player_object.main_ammo_magazine < 1:
+                    player_object.main_ammo_magazine = 0
                     out_of_main_ammo = True
                 is_ready_shooting = False
-        elif player.main_ammo_magazine > 0 :
+        elif player_object.main_ammo_magazine > 0 :
             out_of_main_ammo = False
     if pygame.key.get_pressed()[pygame.K_c] and out_of_main_ammo :
         sound.empty_magazine_sound()
 
-    if player.main_ammo_magazine > 0:
+    if player_object.main_ammo_magazine > 0:
         out_of_main_ammo = False
     if is_ready_throwing:
         if pygame.key.get_pressed()[pygame.K_v] and not airplane_level_1.player_in_airplane:
-            if current_time - last_time_throw_grenade > THROW_DELAY and player.current_amount_grenades > 0:
+            if current_time - last_time_throw_grenade > THROW_DELAY and player_object.current_amount_grenades > 0:
                 last_time_throw_grenade = current_time
-                grenades_group.add(player.throw_grenade())
-                if not player.is_magic_snus_taken:
-                    player.current_amount_grenades -= 1
-                if player.main_ammo_magazine < 1:
+                grenades_group.add(player_object.throw_grenade())
+                if not player_object.is_magic_snus_taken:
+                    player_object.current_amount_grenades -= 1
+                if player_object.main_ammo_magazine < 1:
                     out_of_grenades = True
                 is_ready_throwing = False
-    if player.current_amount_grenades > 0:
+    if player_object.current_amount_grenades > 0:
         out_of_grenades = False
 
     if not is_ready_throwing and current_time - last_shot_time_main_weapon > THROW_DELAY \
@@ -171,29 +173,29 @@ while running_game:
             and not out_of_main_ammo:
         is_ready_shooting = True
 
-    events.handle_blue_ghost_collision_with_bullet(bullet_groups, blue_ghost_group, player)
-    events.handle_mech_collision_with_bullet(bullet_groups, mech_group, player)
-    events.handle_airplane_bombs_collision(airplane_bullets_group, static_mech_group, player, explosions_group)
-    events.handle_mech_damage(mech_group, player)
-    events.handle_grenade_collision(grenades_group, all_enemies_group, player, explosions_group)
-    events.handle_boss_damage(boss_group, player)
-    events.handle_boss_collision_with_bullet(bullet_groups, boss_group, player)
-    events.handle_pickup_ammo_package(ammo_package_group, player)
-    events.fell_into_darkness(player)
-    events.fell_into_darkness_airplane(airplane_level_1, player)
+    events.handle_blue_ghost_collision_with_bullet(bullet_groups, blue_ghost_group, player_experience_mechanism, player_object)
+    events.handle_mech_collision_with_bullet(bullet_groups, mech_group, player_experience_mechanism, player_object)
+    events.handle_airplane_bombs_collision(airplane_bullets_group, static_mech_group, player_experience_mechanism, player_object, explosions_group)
+    events.handle_mech_damage(mech_group, player_object)
+    events.handle_grenade_collision(grenades_group, all_enemies_group, player_experience_mechanism, player_object, explosions_group)
+    events.handle_boss_damage(boss_group, player_object)
+    events.handle_boss_collision_with_bullet(bullet_groups, boss_group, player_experience_mechanism, player_object)
+    events.handle_pickup_ammo_package(ammo_package_group, player_object)
+    events.fell_into_darkness(player_object)
+    events.fell_into_darkness_airplane(airplane_level_1, player_object)
 
 
-    if player.rect.colliderect(aid_kit_1):
-        aid_kit_1.action_health(player)
+    if player_object.rect.colliderect(aid_kit_1):
+        aid_kit_1.action_health(player_object)
         aid_kit_group.remove(aid_kit_1)
 
-    if player.rect.colliderect(snus_1_1) and player.is_magic_snus_taken == False:
+    if player_object.rect.colliderect(snus_1_1) and player_object.is_magic_snus_taken == False:
         snus_taken_time = current_time
-        snus_1_1.action_magic_stats(player)
-        player.snus_special_effect()
+        snus_1_1.action_magic_stats(player_object)
+        player_object.snus_special_effect()
 
     if current_time - snus_taken_time > 5:
-        player.is_magic_snus_taken = False
+        player_object.is_magic_snus_taken = False
 
     #sound efects
     if not ambient_music_switch_level_1:
@@ -202,7 +204,7 @@ while running_game:
 
     play_menu_theme_music = False
 
-    if player.checking_is_dead_player():
+    if player_object.checking_is_dead_player():
         gameover_menu.draw_gameover_menu()
 
     # main updates for every frame of game
@@ -219,20 +221,21 @@ while running_game:
     airplane_bullets_group.update()
     airplane_bullets_group.draw(screen)
     enemy_1.update()
-    mech_group.update(player.rect.x, world)
+    mech_group.update(player_object.rect.x, world)
 
-    boss_group.update(player.rect.x, world)
+    boss_group.update(player_object.rect.x, world)
     explosions_group.draw(screen)
     explosions_group.update()
 
     npc_1.update(screen)
     npc_2.update(screen)
-    airplane_level_1.update(screen, world, player)
+    airplane_level_1.update(screen, world, player_object)
     ammo_package_group.update(screen)
     aid_kit_1.update_package(screen)
     static_mech_group.draw(screen)
     static_mech_group.update()
-    player.update(world, airplane_level_1)
+    player_object.update(world, airplane_level_1)
+    player_ui.update_player_ui(player_object)
     UI.grenades_icon()
     UI.ammo_icon()
     pygame.display.flip()

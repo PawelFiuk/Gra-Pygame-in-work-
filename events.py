@@ -7,17 +7,17 @@ import bullets
 
 """
 
-def handle_blue_ghost_collision_with_bullet(bullet_group, enemy_group, player):
+def handle_blue_ghost_collision_with_bullet(bullet_group, enemy_group, player_exp_mechanism, player_object):
     for bullet in bullet_group:
         for enemy in enemy_group:
             if pygame.sprite.collide_mask(bullet, enemy):
                 enemy.current_health -= bullet.damage_of_bullet
                 bullet.kill()
                 if enemy.checking_is_dead_enemy():
-                    player.gain_experience(enemy.exp_for_player)
+                    player_exp_mechanism.gain_experience(enemy.exp_for_player, player_object)
                     enemy.kill()
 
-def handle_mech_collision_with_bullet(bullet_groups, mech_group, player):
+def handle_mech_collision_with_bullet(bullet_groups, mech_group, player_exp_mechanism, player):
     for bullet in bullet_groups:
         for mech in mech_group:
             if pygame.sprite.collide_mask(bullet, mech):
@@ -25,10 +25,10 @@ def handle_mech_collision_with_bullet(bullet_groups, mech_group, player):
                 mech.received_damage_animation()
                 bullet.kill()
                 if mech.checking_is_dead_enemy():
-                    player.gain_experience(mech.exp_for_player)
+                    player_exp_mechanism.gain_experience(mech.exp_for_player, player)
                     mech.kill()
 
-def handle_airplane_bombs_collision(airplane_bullets_group, static_mech_group, player, explosions_group):
+def handle_airplane_bombs_collision(airplane_bullets_group, static_mech_group, player_exp_mechanism, player, explosions_group):
     for bomb in airplane_bullets_group:
         for static_mech in static_mech_group:
             if pygame.sprite.collide_mask(bomb, static_mech):
@@ -39,7 +39,7 @@ def handle_airplane_bombs_collision(airplane_bullets_group, static_mech_group, p
                 explosions_group.add(explosion_effect)
 
                 if static_mech.checking_is_dead_enemy():
-                    player.gain_experience(static_mech.exp_for_player)
+                    player_exp_mechanism.gain_experience(static_mech.exp_for_player, player)
                     static_mech.kill()
 
 def handle_mech_damage(mech_group, player):
@@ -52,7 +52,7 @@ def handle_mech_damage(mech_group, player):
         else:
             enemy.damage_sent_to_player = False
 
-def handle_grenade_collision(grenade_group, enemy_group, player, explosions_group):
+def handle_grenade_collision(grenade_group, enemy_group, player_exp_mechanism, player, explosions_group):
     for grenade in grenade_group:
         for enemy in enemy_group:
             if pygame.sprite.collide_mask(grenade, enemy):
@@ -61,7 +61,7 @@ def handle_grenade_collision(grenade_group, enemy_group, player, explosions_grou
                 explosion_effect = bullets.Explosion(grenade.rect.x, grenade.rect.y)
                 explosions_group.add(explosion_effect)
                 if enemy.checking_is_dead_enemy():
-                    player.gain_experience(enemy.exp_for_player)
+                    player_exp_mechanism.gain_experience(enemy.exp_for_player, player)
                     enemy.kill()
 
 def handle_boss_damage(boss_group, player):
@@ -74,7 +74,7 @@ def handle_boss_damage(boss_group, player):
         else:
             enemy.damage_sent_to_player = False
 
-def handle_boss_collision_with_bullet(bullet_groups, boss_group, player):
+def handle_boss_collision_with_bullet(bullet_groups, boss_group, player_exp_mechanism, player):
     for bullet in bullet_groups:
         for boss in boss_group:
             if pygame.sprite.collide_mask(bullet, boss):
@@ -82,7 +82,7 @@ def handle_boss_collision_with_bullet(bullet_groups, boss_group, player):
                 boss.received_damage_animation()
                 bullet.kill()
                 if boss.checking_is_dead_enemy():
-                    player.gain_experience(boss.exp_for_player)
+                    player_exp_mechanism.gain_experience(boss.exp_for_player, player)
                     boss.kill()
 
 def handle_pickup_ammo_package(ammo_package_group, player):

@@ -35,15 +35,10 @@ class Player(pygame.sprite.Sprite, physics.Physics):
         self.mask = pygame.mask.from_surface(self.image)
         self.ground_collision = False
         self.experience_levels = {1: 20, 2: 50, 3: 75, 4: 100, 5:150, 6:200, 7:250}
-        self.experience_bar_color = (255, 215, 0)  # Gold color for the XP bar
         self.is_jumping = False
         self.airplane_mode = False
         self.mask = from_surface(self.image)
         self.is_magic_snus_taken = False
-        self.missing_health_bar_colour = (255, 0, 0) # Red colour for normal health bar
-        self.health_bar_colour_normal = (0, 255, 0)
-        self.health_bar_colour_snus_effect = [0, 0, 255] # Blue colour got snus health bar
-        self.actual_health_bar = self.health_bar_colour_normal
 
         # Stats
         self.current_health = 100
@@ -93,11 +88,7 @@ class Player(pygame.sprite.Sprite, physics.Physics):
         self.apply_gravity()
         self.check_collisions(world)
         self.checking_is_dead_player()
-        self.health_bar()
-        self.show_main_ammo()
-        self.draw_experience_bar()
         self.update_mask()
-        self.message_about_avalaible_ability_points()
         self.airplane_updates(airplane)
         if not is_player_in_airplane:
             self.update_camera()
@@ -204,33 +195,6 @@ class Player(pygame.sprite.Sprite, physics.Physics):
     def update_mask(self):
         self.mask = pygame.mask.from_surface(self.image)
 
-    def health_bar(self):
-        """
-        Arguments: self
-        Application: draws a bar with the player's HP number in the upper left corner of the screen
-        Return: None
-        """
-        health_bar_width = 300
-        health_bar_height = 30
-        pygame.draw.rect(screen, self.missing_health_bar_colour, [10, 10, health_bar_width, health_bar_height])
-        if not self.is_magic_snus_taken:
-            pygame.draw.rect(screen, self.health_bar_colour_normal,
-                             [10, 10, (self.current_health / self.max_health) * health_bar_width, health_bar_height])
-        if self.is_magic_snus_taken:
-            pygame.draw.rect(screen, self.health_bar_colour_snus_effect,
-                             [10, 10, (self.current_health / self.max_health) * health_bar_width, health_bar_height])
-
-    def show_main_ammo(self):
-        """
-        Arguments: self
-        Application: draws a players number of main ammo in the upper left corner of the screen
-        Return: None
-        """
-        text = font.render(str(self.main_ammo_magazine), True, (0, 0, 0))
-        screen.blit(text, (50, 50))
-        text_number_of_grenades = font.render(str(self.current_amount_grenades), True, (0, 0, 0))
-        screen.blit(text_number_of_grenades, (50, 110))
-
     def shot_bullet(self):
         """
         Arguments: self
@@ -319,55 +283,6 @@ class Player(pygame.sprite.Sprite, physics.Physics):
         self.rect.x = position_x
         self.rect.y = position_y
 
-    def gain_experience(self, points):
-        """
-        Arguments: self
-        Application: the method adds all the experience points that the player has gained and checks whether
-            a new level has been reached. If so, the level_up() method is called
-        Return: none
-        """
-        self.experience += points
-
-        if self.level < len(self.experience_levels) and self.experience >= self.experience_levels[self.level]:
-            self.level_up()
-
-    def level_up(self):
-        """
-        Arguments: self
-        Application: the method is responsible for adding skill points when advancing to a new level
-            and transferring the remaining experience points to a new level
-        Return: none
-        """
-        temp_exp = self.experience -  self.experience_levels[self.level]
-        self.level += 1
-        self.ability_points += 2
-        self.experience = temp_exp
-
-    def message_about_avalaible_ability_points(self):
-        if self.ability_points > 0:
-            message_about_abilit_points =f"Awansowałeś! Masz {self.ability_points} punktów umiejętności, wciśnij r, żeby otworzyć drzewko umiejętności!"
-            text_level = font_for_ability_message.render(message_about_abilit_points, True, (255, 255, 255))
-            screen.blit(text_level, (1050, 10))
-
-    def draw_experience_bar(self):
-        """
-         Arguments: self, screeen - screen is instance of main window of game
-         Application: the method is responsible for drawing experience bar on screen, on right sight of health bar,
-            colour of experience bar is gold.
-         Return: none
-         """
-        xp_bar_max_width = 300
-        xp_bar_width = 300
-        xp_bar_height = 30
-        xp_percentage = (self.experience / self.experience_levels[self.level]) * xp_bar_max_width
-        pygame.draw.rect(screen, (255, 255, 255),
-                         [350, 10, xp_bar_width, xp_bar_height])
-        pygame.draw.rect(screen, self.experience_bar_color,
-                         [350, 10, xp_percentage, xp_bar_height])
-        level = "   Level "
-        text_level = font.render(str(self.level) + level, True, (255, 255, 255))
-        screen.blit(text_level, (750, 10))
-
     def snus_special_effect(self):
         if self.is_magic_snus_taken:
             self.actual_health_bar = self.health_bar_colour_snus_effect
@@ -390,3 +305,117 @@ class Player(pygame.sprite.Sprite, physics.Physics):
         if is_player_in_airplane:
             self.rect.x = airplane.rect.x
             self.rect.y = airplane.rect.y
+
+class PlayerUI:
+    def __init__(self, player):
+        self.experience = player.experience
+        self.experience_levels = player.experience_levels
+        self.experience_bar_color = (255, 215, 0)
+        self.level = player.level
+        self.ability_points = 0
+        self.missing_health_bar_colour = (255, 0, 0) # Red colour for normal health bar
+        self.health_bar_colour_normal = (0, 255, 0)
+        self.health_bar_colour_snus_effect = [0, 0, 255] # Blue colour got snus health bar
+        self.actual_health_bar = self.health_bar_colour_normal
+        self.is_magic_snus_taken = False
+        self.experience_bar_color = (255, 215, 0)
+        self.max_health = player.max_health
+        self.current_health = player.current_health
+        self.main_ammo_magazine = player.main_ammo_magazine
+        self.current_amount_grenades = player.current_amount_grenades
+
+    def update_player_ui(self, player):
+        self.is_magic_snus_taken = player.is_magic_snus_taken
+        self.experience = player.experience
+        self.experience_levels = player.experience_levels
+        self.ability_points = player.ability_points
+        self.level = player.level
+        self.main_ammo_magazine = player.main_ammo_magazine
+        self.current_amount_grenades = player.current_amount_grenades
+        self.draw_experience_bar()
+        self.message_about_avalaible_ability_points()
+        self.health_bar()
+        self.show_main_ammo()
+
+    def draw_experience_bar(self):
+        """
+         Arguments: self, screeen - screen is instance of main window of game
+         Application: the method is responsible for drawing experience bar on screen, on right sight of health bar,
+            colour of experience bar is gold.
+         Return: none
+         """
+        xp_bar_max_width = 300
+        xp_bar_width = 300
+        xp_bar_height = 30
+        xp_percentage = (self.experience / self.experience_levels[self.level]) * xp_bar_max_width
+        pygame.draw.rect(screen, (255, 255, 255),
+                         [350, 10, xp_bar_width, xp_bar_height])
+        pygame.draw.rect(screen, self.experience_bar_color,
+                         [350, 10, xp_percentage, xp_bar_height])
+        level = "   Level "
+        text_level = font.render(str(self.level) + level, True, (255, 255, 255))
+        screen.blit(text_level, (750, 10))
+
+    def message_about_avalaible_ability_points(self):
+        if self.ability_points > 0:
+            message_about_abilit_points =f"Awansowałeś! Masz {self.ability_points} punktów umiejętności, wciśnij r, żeby otworzyć drzewko umiejętności!"
+            text_level = font_for_ability_message.render(message_about_abilit_points, True, (255, 255, 255))
+            screen.blit(text_level, (1050, 10))
+
+    def health_bar(self):
+        """
+        Arguments: self
+        Application: draws a bar with the player's HP number in the upper left corner of the screen
+        Return: None
+        """
+        health_bar_width = 300
+        health_bar_height = 30
+        pygame.draw.rect(screen, self.missing_health_bar_colour, [10, 10, health_bar_width, health_bar_height])
+        if not self.is_magic_snus_taken:
+            pygame.draw.rect(screen, self.health_bar_colour_normal,
+                             [10, 10, (self.current_health / self.max_health) * health_bar_width, health_bar_height])
+        if self.is_magic_snus_taken:
+            pygame.draw.rect(screen, self.health_bar_colour_snus_effect,
+                             [10, 10, (self.current_health / self.max_health) * health_bar_width, health_bar_height])
+
+    def show_main_ammo(self):
+        """
+        Arguments: self
+        Application: draws a players number of main ammo in the upper left corner of the screen
+        Return: None
+        """
+        text = font.render(str(self.main_ammo_magazine), True, (0, 0, 0))
+        screen.blit(text, (50, 50))
+        text_number_of_grenades = font.render(str(self.current_amount_grenades), True, (0, 0, 0))
+        screen.blit(text_number_of_grenades, (50, 110))
+
+class PlayerLevelMechanism:
+    def __init__(self, player):
+        self.level = player.level
+        self.experience_levels = player.experience_levels
+        self.experience = player.experience
+        self.ability_points = player.ability_points
+
+    def gain_experience(self, points ,player):
+        """
+        Arguments: self
+        Application: the method adds all the experience points that the player has gained and checks whether
+            a new level has been reached. If so, the level_up() method is called
+        Return: none
+        """
+        player.experience += points
+
+        if player.level < len(player.experience_levels) and player.experience >= player.experience_levels[player.level]:
+            self.level_up(player)
+
+    def level_up(self, player):
+        """
+        Arguments: self
+        Application: the method is responsible for adding skill points when advancing to a new level
+            and transferring the remaining experience points to a new level
+        Return: none
+        """
+        temp_exp = player.experience -  player.experience_levels[player.level]
+        player.level += 1
+        player.ability_points += 2
+        player.experience = temp_exp
