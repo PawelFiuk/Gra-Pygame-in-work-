@@ -91,4 +91,13 @@ def handle_pickup_ammo_package(ammo_package_group, player):
             if player.rect.colliderect(ammo_package):
                 ammo_package.action_ammo(player)
                 ammo_package.kill()
-                żout_of_main_ammo = False
+                return True
+
+def fell_into_darkness(player):
+    if not player.airplane_mode:
+        if player.rect.y > SCREEN_HEIGHT:
+            player.current_health = 0
+
+def fell_into_darkness_airplane(airplane, player):
+    if airplane.rect.y > SCREEN_HEIGHT:
+        player.current_health = 0

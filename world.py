@@ -13,7 +13,7 @@ class World():
         dark_top_tile_img = pygame.image.load('assets/map_tiles/dark_top_tile_2.png').convert_alpha()
         dark_right_tile_img = pygame.image.load('assets/map_tiles/dark_right_tile_3.png').convert_alpha()
         dark_left_tile_img = pygame.image.load('assets/map_tiles/dark_left_tile_4.png').convert_alpha()
-        background = pygame.image.load("assets/graphics/steampunk_city_1.jpg").convert_alpha()
+        background = pygame.image.load("assets/graphics/steampunk_city_1.png").convert_alpha()
         self.bg_background = pygame.transform.scale(background, (SCREEN_WIDTH, SCREEN_HEIGHT)).convert_alpha()
 
         self.row_count = 0

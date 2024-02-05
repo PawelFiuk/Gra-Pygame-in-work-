@@ -278,7 +278,7 @@ class EnemySteamMachine(pygame.sprite.Sprite):
         """
         current_time = pygame.time.get_ticks()
         attack_animation_speed = 120
-        attack_cooldown = 2000
+        attack_cooldown = 2500
 
         if current_time - self.last_attack_animation_time > attack_cooldown:
                 self.last_attack_animation_time = current_time
@@ -286,7 +286,6 @@ class EnemySteamMachine(pygame.sprite.Sprite):
 
         if self.current_animation == 'fight':
             if current_time - self.last_attack_animation_time > attack_animation_speed:
-                self.last_attack_animation_time = current_time
                 self.current_frame = (self.current_frame + 1) % len(self.animation_frames[self.current_animation])
                 self.image = self.animation_frames[self.current_animation][self.current_frame]
                 self.send_damage_to_player_flag = True
@@ -512,7 +511,7 @@ class EnemyBossFirstLevel(pygame.sprite.Sprite):
         """
         current_time = pygame.time.get_ticks()
         attack_animation_speed = 120
-        attack_cooldown = 2000
+        attack_cooldown = 1500
 
         if current_time - self.last_attack_animation_time > attack_cooldown:
             self.last_attack_animation_time = current_time
@@ -545,7 +544,7 @@ class EnemyBossFirstLevel(pygame.sprite.Sprite):
                 self.last_walk_animation_time = current_time
                 self.current_frame = (self.current_frame + 1) % len(self.animation_frames[self.current_animation])
                 self.image = self.animation_frames[self.current_animation][self.current_frame]
-                self.current_animation = previous_animation
+                self.current_animation = 'fight'
 
 
 class EnemyStaticMech(pygame.sprite.Sprite):

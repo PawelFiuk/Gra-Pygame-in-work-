@@ -20,15 +20,20 @@ class NPC:
         self.y = y
         self.dialog_text = ("Augustus, pozwól że pomogę ci się stąd wydostać! "
                             "Kierujesz WSAD, strzelasz C, interakcja z obiektami E, "
-                            "ESC to pauza")
+                            "ESC to pauza."
+                            " Żeby zamknąć to okno podejdź do NPC i kliknij E."
+                            " Musisz pokonać bossa znajdującego się na drugim końcu mapy!")
         self.dialog_active = False
         self.last_dialog_time = 0
         self.current_display_text = ""
         self.dialog_box_image = pygame.image.load("assets/graphics/dialog_box_icon.png").convert_alpha()
 
         self.last_dialog_time = 0
+        self.clicked_tutorial = False
 
     def update(self, window):
+        if not self.clicked_tutorial:
+            self.draw_dialog(window)
         self.update_camera()
         self.draw(window)
 
@@ -38,7 +43,7 @@ class NPC:
         :return:
         """
         current_time = time.time()
-        if current_time - self.last_dialog_time >= 1:
+        if current_time - self.last_dialog_time >= 0.1:
             self.dialog_active = not self.dialog_active
             self.last_dialog_time = current_time
             if self.dialog_active:
@@ -89,5 +94,8 @@ class NPC2(NPC):
     def __init__(self, x, y, image_source):
         super().__init__(x, y, image_source)
         self.dialog_text = ("To jest statek powietrzny którym sie stad wydostasz! "
-                            "Kierujesz WSAD, strzelasz C, interakcja z obiektami E, "
+                            "Kierujesz WSAD, zrzucasz bomby za pomocą C, "
                             "zestrzel wszystkie beczki!")
+    def update(self, window):
+        self.update_camera()
+        self.draw(window)

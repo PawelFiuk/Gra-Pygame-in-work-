@@ -107,6 +107,10 @@ while running_game:
 
                 if player.rect.colliderect(npc_1.rect) or player.rect.colliderect(npc_2.rect):
                     npc_1.dialog_box() if player.rect.colliderect(npc_1.rect) else npc_2.dialog_box()
+                if tutorial_flag:
+                    if player.rect.colliderect(npc_1.rect) or player.rect.colliderect(npc_2.rect):
+                        tutorial_flag = False
+                        npc_1.clicked_tutorial = True
 
         elif airplane_level_1.player_in_airplane and keys[pygame.K_e] and current_time - time_entered_airplane >= 2.0:
             airplane_level_1.player_in_airplane = False
@@ -125,6 +129,7 @@ while running_game:
                 if not player.is_magic_snus_taken:
                     player.main_ammo_magazine -= 1
                 if player.main_ammo_magazine < 1:
+                    player.main_ammo_magazine = 0
                     out_of_main_ammo = True
                 is_ready_shooting = False
         elif player.main_ammo_magazine > 0 :
@@ -132,6 +137,8 @@ while running_game:
     if pygame.key.get_pressed()[pygame.K_c] and out_of_main_ammo :
         sound.empty_magazine_sound()
 
+    if player.main_ammo_magazine > 0:
+        out_of_main_ammo = False
     if is_ready_throwing:
         if pygame.key.get_pressed()[pygame.K_v] and not airplane_level_1.player_in_airplane:
             if current_time - last_time_throw_grenade > THROW_DELAY and player.current_amount_grenades > 0:
@@ -142,8 +149,8 @@ while running_game:
                 if player.main_ammo_magazine < 1:
                     out_of_grenades = True
                 is_ready_throwing = False
-        elif player.main_ammo_magazine > 0:
-            out_of_grenades = False
+    if player.current_amount_grenades > 0:
+        out_of_grenades = False
 
     if not is_ready_throwing and current_time - last_shot_time_main_weapon > THROW_DELAY \
             and not out_of_grenades:
@@ -172,6 +179,8 @@ while running_game:
     events.handle_boss_damage(boss_group, player)
     events.handle_boss_collision_with_bullet(bullet_groups, boss_group, player)
     events.handle_pickup_ammo_package(ammo_package_group, player)
+    events.fell_into_darkness(player)
+    events.fell_into_darkness_airplane(airplane_level_1, player)
 
 
     if player.rect.colliderect(aid_kit_1):
@@ -218,12 +227,12 @@ while running_game:
 
     npc_1.update(screen)
     npc_2.update(screen)
-    airplane_level_1.update(screen, world)
+    airplane_level_1.update(screen, world, player)
     ammo_package_group.update(screen)
     aid_kit_1.update_package(screen)
     static_mech_group.draw(screen)
     static_mech_group.update()
-    player.update(world)
+    player.update(world, airplane_level_1)
     UI.grenades_icon()
     UI.ammo_icon()
     pygame.display.flip()
