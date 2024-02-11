@@ -21,6 +21,9 @@ screen_menu = pygame.display.set_mode(desktop_size, pygame.FULLSCREEN)
 resolution = (desktop_size[0], desktop_size[1])
 SCREEN_WIDTH = desktop_size[0]
 SCREEN_HEIGHT = desktop_size[1]
+INVENTORY_SCREEN_WIDTH = 0
+INVENTORY_SCREEN_HEIGHT = 0
+SLOT_SIZE = 150
 pygame.display.set_caption("Steampunk")
 
 WHITE = (255, 255, 255)
@@ -79,6 +82,13 @@ flipped_player_global = False
 is_dead_player = False
 snus_taken_time = 0
 START_GAME = False
+
+slot_invetory_data =(
+    [1, 1, 1, 1],
+    [1, 1, 1, 1],
+    [1, 1, 1, 1],
+    [1, 1, 1, 1],
+)
 
 # World map level 1
 
