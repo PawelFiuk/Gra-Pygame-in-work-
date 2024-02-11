@@ -7,7 +7,11 @@ from pygame.mask import from_surface
 
 """
     This class contains main functionality for player.    
-    
+    Main class Player contains all most important utilities for player like movement, basic animations,
+    drawing on the screen.
+    Class PlayerUI contains functionality of drawing things like health bar, exp bar, showing amount of ammonition etc.
+    Class PlayerLevelMechanism contains all functionality for getting experience, gaining the next level, awarding skill
+    points.
 """
 
 
@@ -285,7 +289,6 @@ class Player(pygame.sprite.Sprite, physics.Physics):
 
     def snus_special_effect(self):
         if self.is_magic_snus_taken:
-            self.actual_health_bar = self.health_bar_colour_snus_effect
             self.current_health = self.max_health
             self.main_ammo_magazine = self.max_main_ammo_magazine
             self.current_amount_grenades = self.max_grenade_amount
@@ -332,6 +335,7 @@ class PlayerUI:
         self.level = player.level
         self.main_ammo_magazine = player.main_ammo_magazine
         self.current_amount_grenades = player.current_amount_grenades
+        self.current_health = player.current_health
         self.draw_experience_bar()
         self.message_about_avalaible_ability_points()
         self.health_bar()

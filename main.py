@@ -14,6 +14,7 @@ import skill_tree
 import magic_snus
 import events
 import UI
+import EQ
 
 
 # Initialisation of game
@@ -63,6 +64,7 @@ static_mech_2 = EnemyStaticMech(7600, 930)
 static_mech_3 = EnemyStaticMech(8400, 930)
 static_mech_4 = EnemyStaticMech(9500, 930)
 boss = EnemyBossFirstLevel(15500, SCREEN_HEIGHT - 800)
+player_eq = EQ.PlayerInventory(slot_invetory_data)
 
 
 # Adding objects to groups
@@ -120,6 +122,9 @@ while running_game:
 
         elif keys[pygame.K_r]:
             skill_tree_for_player.update(player_object)
+
+        elif keys[pygame.K_p]:
+            player_eq.update()
 
     # mechanics of shooting
     if is_ready_shooting:
