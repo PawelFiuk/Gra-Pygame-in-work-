@@ -1,3 +1,5 @@
+import pygame
+
 from settings import *
 import bullets
 """
@@ -45,10 +47,9 @@ def handle_airplane_bombs_collision(airplane_bullets_group, static_mech_group, p
 def handle_mech_damage(mech_group, player):
     for enemy in mech_group:
         if enemy.current_animation == 'fight' and enemy.send_damage_to_player_flag:
-            if not enemy.damage_sent_to_player:
-                if not player.is_magic_snus_taken:
-                    player.current_health -= 10
-                    enemy.damage_sent_to_player = True
+            if not enemy.damage_sent_to_player and not player.is_magic_snus_taken:
+                player.current_health -= 10
+                enemy.damage_sent_to_player = True
         else:
             enemy.damage_sent_to_player = False
 
@@ -67,10 +68,9 @@ def handle_grenade_collision(grenade_group, enemy_group, player_exp_mechanism, p
 def handle_boss_damage(boss_group, player):
     for enemy in boss_group:
         if enemy.current_animation == 'fight' and enemy.send_damage_to_player_flag:
-            if not enemy.damage_sent_to_player:
-                if not player.is_magic_snus_taken:
-                    player.current_health -= 10
-                    enemy.damage_sent_to_player = True
+            if not enemy.damage_sent_to_player and not player.is_magic_snus_taken:
+                player.current_health -= 10
+                enemy.damage_sent_to_player = True
         else:
             enemy.damage_sent_to_player = False
 
@@ -94,10 +94,25 @@ def handle_pickup_ammo_package(ammo_package_group, player):
                 return True
 
 def fell_into_darkness(player):
-    if not player.airplane_mode:
-        if player.rect.y > SCREEN_HEIGHT:
-            player.current_health = 0
+    if not player.airplane_mode and player.rect.y > SCREEN_HEIGHT:
+        player.current_health = 0
 
 def fell_into_darkness_airplane(airplane, player):
     if airplane.rect.y > SCREEN_HEIGHT:
         player.current_health = 0
+
+class RoomNavigator:
+    def __init__(self, x_cord: int, y_cord: int):
+        """
+        Arguments: self, position - x and y position where doors to enter should be placed,
+        Application: s
+        Return: None
+        """
+        self.entrance = pygame.Rect(x_cord, y_cord, 50, 50)
+        self.entrance_alpha = 0  # Przezroczystość wejścia (0 - całkowicie przezroczyste, 255 - całkowicie nieprzezroczyste)
+        self.entrance_color = (255, 0, 0)
+        self.is_clicked_e = False
+
+    def draw(self):
+        screen.blit(self.entrance, (self.x_cord, self.y_cord))
+        pygame.display.flip()

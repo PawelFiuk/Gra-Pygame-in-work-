@@ -41,6 +41,7 @@ boss_group = pygame.sprite.Group()
 
 # Making objects of game
 world = world.World(world_data)
+#world_level_2 = world.World(world_data_level_2)
 player_object = player.Player(100, SCREEN_HEIGHT - 800)
 player_ui = player.PlayerUI(player_object)
 player_experience_mechanism = player.PlayerLevelMechanism(player_object)
@@ -110,7 +111,7 @@ while running_game:
                     player_object.enter_airplane_mode()
 
                 if player_object.rect.colliderect(npc_1.rect) or player_object.rect.colliderect(npc_2.rect):
-                    npc_1.dialog_box() if player_object.rect.colliderect(npc_1.rect) else npc_2.dialog_box()
+                    npc_1.dialog_box()
                 if tutorial_flag:
                     if player_object.rect.colliderect(npc_1.rect) or player_object.rect.colliderect(npc_2.rect):
                         tutorial_flag = False
@@ -135,7 +136,7 @@ while running_game:
                 bullet_groups.add(player_object.shot_bullet())
                 if not player_object.is_magic_snus_taken:
                     player_object.main_ammo_magazine -= 1
-                if player_object.main_ammo_magazine < 1:
+                elif player_object.main_ammo_magazine < 1:
                     player_object.main_ammo_magazine = 0
                     out_of_main_ammo = True
                 is_ready_shooting = False
@@ -153,7 +154,7 @@ while running_game:
                 grenades_group.add(player_object.throw_grenade())
                 if not player_object.is_magic_snus_taken:
                     player_object.current_amount_grenades -= 1
-                if player_object.main_ammo_magazine < 1:
+                elif player_object.main_ammo_magazine < 1:
                     out_of_grenades = True
                 is_ready_throwing = False
     if player_object.current_amount_grenades > 0:
@@ -215,9 +216,7 @@ while running_game:
     # main updates for every frame of game
     CLOCK.tick(FPS)
 
-    # updates section
     world.draw()
-
     snus_1_1.update_package(screen)
     bullet_groups.update()
     bullet_groups.draw(screen)
