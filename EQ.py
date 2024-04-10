@@ -11,7 +11,7 @@ class PlayerInventory:
         self.map_data = data
         slot_inventory_image = settings.pygame.image.load('assets/graphics/slot_inventory_image.png').convert_alpha()
         background = settings.pygame.image.load("assets/graphics/inventory_background.png").convert_alpha()
-        self.bg_background = settings.pygame.transform.scale(background, (settings.SCREEN_WIDTH/2, settings.SCREEN_HEIGHT)).convert_alpha()
+        self.bg_background = settings.pygame.transform.scale(background, (settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT)).convert_alpha()
 
         self.row_count = 0
         for row in self.map_data:
@@ -45,7 +45,6 @@ class PlayerInventory:
                         settings.last_skill_tree_time = current_time
                         paused = False
                         return paused
-            #screen.blit(self.bg_background, [0, 0])
             settings.screen.blit(self.bg_background, (self.x_cord, self.y_cord))
             for tile in self.tile_inventory_list:
                 settings.screen.blit(tile[0], tile[1])
