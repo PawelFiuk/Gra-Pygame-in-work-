@@ -1,5 +1,6 @@
 import pygame
 
+import settings
 from settings import *
 import bullets
 """
@@ -92,7 +93,15 @@ def handle_pickup_ammo_package(ammo_package_group, player):
                 ammo_package.action_ammo(player)
                 ammo_package.kill()
                 return True
+def handle_entering_room_1_level_1(doors_group, player, door_object):
+    for doors in doors_group:
+        if player.rect.colliderect(doors):
+            doors.show_information_about_interaction()
+            if door_object.enter_room:
+                settings.collision_with_doors = True
 
+        else:
+            settings.collision_with_doors = False
 def fell_into_darkness(player):
     if not player.airplane_mode and player.rect.y > SCREEN_HEIGHT:
         player.current_health = 0
@@ -101,18 +110,42 @@ def fell_into_darkness_airplane(airplane, player):
     if airplane.rect.y > SCREEN_HEIGHT:
         player.current_health = 0
 
-class RoomNavigator:
+class RoomNavigator(pygame.sprite.Sprite):
     def __init__(self, x_cord: int, y_cord: int):
         """
         Arguments: self, position - x and y position where doors to enter should be placed,
         Application: s
         Return: None
         """
-        self.entrance = pygame.Rect(x_cord, y_cord, 50, 50)
-        self.entrance_alpha = 0  # Przezroczystość wejścia (0 - całkowicie przezroczyste, 255 - całkowicie nieprzezroczyste)
-        self.entrance_color = (255, 0, 0)
-        self.is_clicked_e = False
+        pygame.sprite.Sprite.__init__(self)
+        image_doors = pygame.image.load('assets/graphics/doors.png').convert_alpha()
+        self.image = pygame.transform.scale(image_doors, (200, 300)).convert_alpha()
+        self.rect = self.image.get_rect()
+        self.rect.x = x_cord
+        self.rect.y = y_cord
+        self.width = self.image.get_width()
+        self.height = self.image.get_height()
 
+    def update(self):
+        self.draw()
+        self.update_camera()
     def draw(self):
-        screen.blit(self.entrance, (self.x_cord, self.y_cord))
+        screen.blit(self.image, (self.rect.x, self.rect.y))
+
+    def update_camera(self):
+        """
+            Arguments: self
+            Application: updates the display of the package and the world based
+                on the player's movement.
+            Return: None
+        """
+        self.rect.x -= scroll_position_of_player[0]
+
+    def show_information_about_interaction(self):
+        interaction_information = "Wciśnij E, żeby wejść"
+        text_interaction_info = font_skill_tree.render(interaction_information, True, (255, 255, 255))
+        screen.blit(text_interaction_info, (550, 450))
         pygame.display.flip()
+
+    def enter_room(self):
+        return True

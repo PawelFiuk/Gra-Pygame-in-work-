@@ -23,6 +23,7 @@ pygame.init()
 running_game = False
 running_menu = True
 paused = False
+running_level_1_room_1 = False
 
 # Groups
 bullet_groups = pygame.sprite.Group()
@@ -38,10 +39,11 @@ grenades_group = pygame.sprite.Group()
 blue_ghost_group = pygame.sprite.Group()
 all_enemies_group = pygame.sprite.Group()
 boss_group = pygame.sprite.Group()
+doors_group = pygame.sprite.Group()
 
 # Making objects of game
-world = world.World(world_data)
-#world_level_2 = world.World(world_data_level_2)
+world_level_1 = world.Level_1(world_data)
+world_level_2 = world.Level_1(world_data_level_2)
 player_object = player.Player(100, SCREEN_HEIGHT - 800)
 player_ui = player.PlayerUI(player_object)
 player_experience_mechanism = player.PlayerLevelMechanism(player_object)
@@ -66,6 +68,7 @@ static_mech_3 = EnemyStaticMech(8400, 930)
 static_mech_4 = EnemyStaticMech(9500, 930)
 boss = EnemyBossFirstLevel(15500, SCREEN_HEIGHT - 800)
 player_eq = EQ.PlayerInventory(slot_invetory_data)
+doors_to_level_1_room_1 = events.RoomNavigator(1200, 350)
 
 
 # Adding objects to groups
@@ -76,6 +79,7 @@ aid_kit_group.add(aid_kit_1 ,aid_kit_2)
 ammo_package_group.add(ammo_package_level_1_1, ammo_package_level_1_2, ammo_package_level_1_3)
 blue_ghost_group.add(enemy_1)
 boss_group.add(boss)
+doors_group.add(doors_to_level_1_room_1)
 
 all_enemies_group.add(mech_group, blue_ghost_group, boss_group)
 
@@ -109,6 +113,10 @@ while running_game:
                     time_entered_airplane = current_time
                     airplane_level_1.player_in_airplane = True
                     player_object.enter_airplane_mode()
+
+                elif settings.collision_with_doors:
+                    running_level_1_room_1 = True
+                    running_game = False
 
                 if player_object.rect.colliderect(npc_1.rect) or player_object.rect.colliderect(npc_2.rect):
                     npc_1.dialog_box()
@@ -189,6 +197,8 @@ while running_game:
     events.handle_pickup_ammo_package(ammo_package_group, player_object)
     events.fell_into_darkness(player_object)
     events.fell_into_darkness_airplane(airplane_level_1, player_object)
+    events.handle_entering_room_1_level_1(doors_group, player_object, doors_to_level_1_room_1)
+
 
 
     if player_object.rect.colliderect(aid_kit_1):
@@ -216,7 +226,7 @@ while running_game:
     # main updates for every frame of game
     CLOCK.tick(FPS)
 
-    world.draw()
+    world_level_1.draw()
     snus_1_1.update_package(screen)
     bullet_groups.update()
     bullet_groups.draw(screen)
@@ -225,21 +235,63 @@ while running_game:
     airplane_bullets_group.update()
     airplane_bullets_group.draw(screen)
     enemy_1.update()
-    mech_group.update(player_object.rect.x, world)
+    mech_group.update(player_object.rect.x, world_level_1)
 
-    boss_group.update(player_object.rect.x, world)
+    boss_group.update(player_object.rect.x, world_level_1)
     explosions_group.draw(screen)
     explosions_group.update()
+    doors_to_level_1_room_1.update()
 
     npc_1.update(screen)
     npc_2.update(screen)
-    airplane_level_1.update(screen, world, player_object)
+    airplane_level_1.update(screen, world_level_1, player_object)
     ammo_package_group.update(screen)
     aid_kit_1.update_package(screen)
     static_mech_group.draw(screen)
     static_mech_group.update()
-    player_object.update(world, airplane_level_1)
+    player_object.update(world_level_1, airplane_level_1)
     player_ui.update_player_ui(player_object)
     UI.grenades_icon()
     UI.ammo_icon()
+    pygame.display.flip()
+
+
+while running_level_1_room_1:
+    for event in pygame.event.get():
+        keys = pygame.key.get_pressed()
+
+        if keys[pygame.K_ESCAPE] and current_time - last_esc_time >= 0.5:
+            last_esc_time = current_time
+            pause_menu_screen()
+
+        elif event.type == pygame.QUIT:
+            pygame.quit()
+
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_e:
+                if player_object.rect.colliderect(airplane_level_1.rect) and not airplane_level_1.player_in_airplane:
+                    time_entered_airplane = current_time
+                    airplane_level_1.player_in_airplane = True
+                    player_object.enter_airplane_mode()
+
+                if player_object.rect.colliderect(npc_1.rect) or player_object.rect.colliderect(npc_2.rect):
+                    npc_1.dialog_box()
+                if tutorial_flag:
+                    if player_object.rect.colliderect(npc_1.rect) or player_object.rect.colliderect(npc_2.rect):
+                        tutorial_flag = False
+                        npc_1.clicked_tutorial = True
+
+        elif airplane_level_1.player_in_airplane and keys[pygame.K_e] and current_time - time_entered_airplane >= 2.0:
+            airplane_level_1.player_in_airplane = False
+            player_object.exit_airplane_mode(airplane_level_1.rect.x, airplane_level_1.rect.y)
+
+        elif keys[pygame.K_r]:
+            skill_tree_for_player.update(player_object)
+
+        elif keys[pygame.K_p]:
+            player_eq.update()
+
+    world_level_2.draw()
+
+    CLOCK.tick(FPS)
     pygame.display.flip()
