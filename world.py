@@ -60,6 +60,3 @@ class Level1:
             #tile[1][1] -= scroll_position_of_player[1]
             screen.blit(tile[0], tile[1])
             # to do : create Y axix scrolling after jumping
-
-
-

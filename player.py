@@ -329,6 +329,7 @@ class PlayerUI:
 
     def update_player_ui(self, player):
         self.is_magic_snus_taken = player.is_magic_snus_taken
+        self.max_health = player.max_health
         self.experience = player.experience
         self.experience_levels = player.experience_levels
         self.ability_points = player.ability_points

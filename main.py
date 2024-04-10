@@ -20,7 +20,7 @@ import EQ
 # Initialisation of game
 
 pygame.init()
-running_game = False
+level_1 = False
 running_menu = True
 paused = False
 running_level_1_room_1 = False
@@ -42,8 +42,8 @@ boss_group = pygame.sprite.Group()
 doors_group = pygame.sprite.Group()
 
 # Making objects of game
-world_level_1 = world.Level_1(world_data)
-world_level_2 = world.Level_1(world_data_level_2)
+world_level_1 = world.Level1(world_data)
+world_level_2 = world.Level1(world_data_level_2)
 player_object = player.Player(100, SCREEN_HEIGHT - 800)
 player_ui = player.PlayerUI(player_object)
 player_experience_mechanism = player.PlayerLevelMechanism(player_object)
@@ -90,11 +90,11 @@ while running_menu:
 
     if menu_init.draw():
         sound.stop_main_music()
-        running_game = True
+        level_1 = True
         running_menu = False
 
 
-while running_game:
+while level_1:
     current_time = time.time()
 
     for event in pygame.event.get():
@@ -116,7 +116,7 @@ while running_game:
 
                 elif settings.collision_with_doors:
                     running_level_1_room_1 = True
-                    running_game = False
+                    level_1 = False
 
                 if player_object.rect.colliderect(npc_1.rect) or player_object.rect.colliderect(npc_2.rect):
                     npc_1.dialog_box()
@@ -257,6 +257,7 @@ while running_game:
 
 
 while running_level_1_room_1:
+    current_time = time.time()
     for event in pygame.event.get():
         keys = pygame.key.get_pressed()
 
