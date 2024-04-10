@@ -2,7 +2,7 @@ import pygame.sprite
 from settings import *
 
 
-class World:
+class Level1:
     def __init__(self, data):
         self.x_cord = 0
         self.y_cord = 0
@@ -27,21 +27,23 @@ class World:
                     tile = [dark_underground_tile_img, img_rect_dirt]
                     self.tile_list.append(tile)
 
-                if tile == 2:
+                elif tile == 2:
                     dark_top_tile_img = pygame.transform.scale(dark_top_tile_img, (TILE_SIZE, TILE_SIZE))
                     img_rect_stone = dark_top_tile_img.get_rect()
                     img_rect_stone.x = col_count * TILE_SIZE
                     img_rect_stone.y = self.row_count * TILE_SIZE - TILE_SIZE
                     tile = [dark_top_tile_img, img_rect_stone]
                     self.tile_list.append(tile)
-                if tile == 3:
+
+                elif tile == 3:
                     dark_right_tile_img = pygame.transform.scale(dark_right_tile_img, (TILE_SIZE, TILE_SIZE))
                     img_rect_right_stone = dark_right_tile_img.get_rect()
                     img_rect_right_stone.x = col_count * TILE_SIZE
                     img_rect_right_stone.y = self.row_count * TILE_SIZE - TILE_SIZE
                     tile = [dark_right_tile_img, img_rect_right_stone]
                     self.tile_list.append(tile)
-                if tile == 4:
+
+                elif tile == 4:
                     dark_left_tile_img = pygame.transform.scale(dark_left_tile_img, (TILE_SIZE, TILE_SIZE))
                     img_rect_left_stone = dark_left_tile_img.get_rect()
                     img_rect_left_stone.x = col_count * TILE_SIZE
@@ -57,3 +59,4 @@ class World:
             tile[1][0] -= scroll_position_of_player[0]
             #tile[1][1] -= scroll_position_of_player[1]
             screen.blit(tile[0], tile[1])
+            # to do : create Y axix scrolling after jumping
