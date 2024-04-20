@@ -16,11 +16,10 @@ def pause_menu_screen():
             if event.type == pygame.QUIT:
                 pygame.quit()
 
-            if pygame.key.get_pressed()[pygame.K_ESCAPE]:
-                if current_time - settings.last_esc_time >= 0.5:
-                    settings.last_esc_time = current_time
-                    paused = False
-                    return paused
+            if pygame.key.get_pressed()[pygame.K_ESCAPE] and current_time - settings.last_esc_time >= 0.5:
+                settings.last_esc_time = current_time
+                paused = False
+                return paused
 
         screen.fill([100, 100, 100])
         pause_text = pygame.image.load("assets/graphics/pause_text.png").convert_alpha()

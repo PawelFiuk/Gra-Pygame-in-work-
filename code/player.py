@@ -80,7 +80,7 @@ class Player(pygame.sprite.Sprite, physics.Physics):
         self.current_animation = 'idle'  # Default animation
         self.current_frame = 0
 
-    def update(self, world, airplane):
+    def update_level_1(self, world, airplane):
         """
            Arguments: self, world - world is an instance of the World object that generates the entire game world
            Application: method calls any other methods to be called or checked in each frame of the game,
@@ -97,6 +97,22 @@ class Player(pygame.sprite.Sprite, physics.Physics):
         if not is_player_in_airplane:
             self.update_camera()
             self.handle_movement()
+
+    def update_level_1_room_1(self, world):
+        """
+           Arguments: self, world - world is an instance of the World object that generates the entire game world
+           Application: method calls any other methods to be called or checked in each frame of the game,
+                it serves as a handle
+           Return: None
+        """
+        self.draw()
+        self.animate()
+        self.apply_gravity()
+        self.check_collisions(world)
+        self.checking_is_dead_player()
+        self.update_mask()
+        self.update_camera()
+        self.handle_movement()
 
     def handle_movement(self):
         """

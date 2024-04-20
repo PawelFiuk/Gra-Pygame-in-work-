@@ -82,9 +82,8 @@ class Airplane(pygame.sprite.Sprite):
 
     def check_collisions(self, world):
         """
-           Arguments: self
-           Application: updates the display of the airplane and the world based
-               on the player's movement.
+           Arguments: self, world - main object of game
+           Application: checks if airplane is colliding with map tiles
            Return: None
         """
 

@@ -8,10 +8,11 @@ class Level1:
         self.y_cord = 0
         self.tile_list = []
         self.map_data = data
-        dark_underground_tile_img = pygame.image.load('assets/map_tiles/dark_underground_tile_1.png').convert_alpha()
-        dark_top_tile_img = pygame.image.load('assets/map_tiles/dark_top_tile_2.png').convert_alpha()
-        dark_right_tile_img = pygame.image.load('assets/map_tiles/dark_right_tile_3.png').convert_alpha()
-        dark_left_tile_img = pygame.image.load('assets/map_tiles/dark_left_tile_4.png').convert_alpha()
+        dark_underground_tile_img = pygame.image.load(
+            'assets/graphics/map_tiles/dark_underground_tile_1.png').convert_alpha()
+        dark_top_tile_img = pygame.image.load('assets/graphics/map_tiles/dark_top_tile_2.png').convert_alpha()
+        dark_right_tile_img = pygame.image.load('assets/graphics/map_tiles/dark_right_tile_3.png').convert_alpha()
+        dark_left_tile_img = pygame.image.load('assets/graphics/map_tiles/dark_left_tile_4.png').convert_alpha()
         background = pygame.image.load("assets/graphics/steampunk_city_1.png").convert_alpha()
         self.bg_background = pygame.transform.scale(background, (SCREEN_WIDTH, SCREEN_HEIGHT)).convert_alpha()
 
