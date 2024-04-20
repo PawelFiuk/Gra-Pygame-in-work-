@@ -5,7 +5,7 @@ from settings import *
 import bullets
 """
     These functions are used to better and nicer implement, among others, 
-    the collision of the bullets with the enemy using groups from the pygame library.
+    the collision of the bullets with the enemies using groups from the pygame library.
     Functions are later called in main file in main loop of the game.
 
 """

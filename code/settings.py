@@ -34,7 +34,7 @@ BLACK = (0, 0, 0)
 start_button_img = pygame.image.load("assets/graphics/start_button_menu.png")
 exit_button_img = pygame.image.load("assets/graphics/quit_button_menu.png")
 add_ability_button_img = pygame.image.load("assets/graphics/plus_button.png")
-npc_1_image = pygame.image.load("assets/npc/npc_dirty.png")
+npc_1_image = pygame.image.load("assets/graphics/npc/npc_dirty.png")
 airplane_image_asset = pygame.image.load("assets/graphics/ship.png")
 
 # Music

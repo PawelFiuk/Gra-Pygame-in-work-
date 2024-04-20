@@ -8,8 +8,9 @@ class Menu:
         self.running_menu = True
         self.bg_menu = pygame.image.load("assets/graphics/menu_bg.png").convert_alpha()
         self.main_text = pygame.image.load("assets/graphics/steampunk_text.png").convert_alpha()
-        self.bg_menu = pygame.transform.scale(self.bg_menu, (SCREEN_WIDTH, SCREEN_HEIGHT)).convert_alpha()
+        self.bg_menu = pygame.transform.scale(self.bg_menu, (SCREEN_WIDTH +300, SCREEN_HEIGHT +300)).convert_alpha()
         pygame.display.set_caption("Steampunk")
+        self.delay = 0
         try:
             sound.main_menu_music()
         except:
@@ -21,7 +22,8 @@ class Menu:
         button_quit = button.Button(60, 900, exit_button_img, 0.025)
 
         while self.running_menu:
-            screen_menu.blit(self.bg_menu, (0, 0))
+            self.delay += 0.05
+            screen_menu.blit(self.bg_menu, (0 + self.delay, 0 ))
             screen_menu.blit(self.main_text, (600, 100))
             button_start.draw()
             button_quit.draw()

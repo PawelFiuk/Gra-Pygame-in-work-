@@ -75,9 +75,9 @@ class AirplaneBulelts(pygame.sprite.Sprite):
         if self.distance_of_bullet >= 1700:
            self.kill()
 
-    #def collision_with_enemy(self, enemy):
-    #    if pygame.sprite.spritecollide(self, enemy, True):
-    #        enemy.current_health -=15
+    #def collision_with_enemy(self, enemies):
+    #    if pygame.sprite.spritecollide(self, enemies, True):
+    #        enemies.current_health -=15
 
 class Explosion(pygame.sprite.Sprite):
     def __init__(self, x, y, animation_speed=35):
