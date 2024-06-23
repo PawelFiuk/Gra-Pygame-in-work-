@@ -8,7 +8,7 @@ class AmmunitionPackage(pygame.sprite.Sprite):
         Return: None
         """
         pygame.sprite.Sprite.__init__(self)
-        item_image = pygame.image.load('assets/graphics/ammo_package.png').convert_alpha()
+        item_image = pygame.image.load('code/assets/graphics/ammo_package.png').convert_alpha()
         self.image = pygame.transform.scale(item_image, (100, 80)).convert_alpha()
         self.rect = self.image.get_rect()
         self.rect.x = x
