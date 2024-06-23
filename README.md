@@ -47,5 +47,3 @@ I do not have copyrights to music and graphics.
 ## License
 
 This project is licensed under the MIT License. Feel free to modify and distribute it as you see fit.
-
-Enjoy playing the Steampunk Platformer game! If you have any questions or need assistance, don't hesitate to reach out.
